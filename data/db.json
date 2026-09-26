@@ -1,0 +1,361 @@
+{
+  "households": [
+    {
+      "id": "HH-001",
+      "name": "Juan Dela Cruz",
+      "username": "juan",
+      "email": "juan@email.com",
+      "barangay": "Bacao II, General Trias, Cavite",
+      "accountType": "Residential — Standard",
+      "status": "Active",
+      "history": [
+        {
+          "monthKey": "2025-12",
+          "month": "December 2025",
+          "consumption": 16
+        },
+        {
+          "monthKey": "2026-01",
+          "month": "January 2026",
+          "consumption": 19
+        },
+        {
+          "monthKey": "2026-02",
+          "month": "February 2026",
+          "consumption": 17
+        },
+        {
+          "monthKey": "2026-03",
+          "month": "March 2026",
+          "consumption": 18
+        },
+        {
+          "monthKey": "2026-04",
+          "month": "April 2026",
+          "consumption": 22
+        },
+        {
+          "monthKey": "2026-05",
+          "month": "May 2026",
+          "consumption": 20
+        }
+      ],
+      "forecast": null
+    },
+    {
+      "id": "HH-002",
+      "name": "Maria Santos",
+      "username": "maria",
+      "email": "maria@email.com",
+      "barangay": "Bacao II, General Trias, Cavite",
+      "accountType": "Residential — Standard",
+      "status": "Active",
+      "history": [
+        {
+          "monthKey": "2025-12",
+          "month": "December 2025",
+          "consumption": 15
+        },
+        {
+          "monthKey": "2026-01",
+          "month": "January 2026",
+          "consumption": 16
+        },
+        {
+          "monthKey": "2026-02",
+          "month": "February 2026",
+          "consumption": 17
+        },
+        {
+          "monthKey": "2026-03",
+          "month": "March 2026",
+          "consumption": 16
+        },
+        {
+          "monthKey": "2026-04",
+          "month": "April 2026",
+          "consumption": 19
+        },
+        {
+          "monthKey": "2026-05",
+          "month": "May 2026",
+          "consumption": 18
+        }
+      ],
+      "forecast": null
+    },
+    {
+      "id": "HH-003",
+      "name": "Richard Cadigal",
+      "username": "richard",
+      "email": "richard@email.com",
+      "barangay": "Bacao I, General Trias, Cavite",
+      "accountType": "Residential — Standard",
+      "status": "Active",
+      "history": [
+        {
+          "monthKey": "2025-12",
+          "month": "December 2025",
+          "consumption": 18
+        },
+        {
+          "monthKey": "2026-01",
+          "month": "January 2026",
+          "consumption": 20
+        },
+        {
+          "monthKey": "2026-02",
+          "month": "February 2026",
+          "consumption": 19
+        },
+        {
+          "monthKey": "2026-03",
+          "month": "March 2026",
+          "consumption": 21
+        },
+        {
+          "monthKey": "2026-04",
+          "month": "April 2026",
+          "consumption": 23
+        },
+        {
+          "monthKey": "2026-05",
+          "month": "May 2026",
+          "consumption": 22
+        }
+      ],
+      "forecast": null
+    },
+    {
+      "id": "HH-004",
+      "name": "Pedro Garcia",
+      "username": "pedro",
+      "email": "pedro@email.com",
+      "barangay": "Bacao I, General Trias, Cavite",
+      "accountType": "Residential — Standard",
+      "status": "Inactive",
+      "history": [
+        {
+          "monthKey": "2025-12",
+          "month": "December 2025",
+          "consumption": 14
+        },
+        {
+          "monthKey": "2026-01",
+          "month": "January 2026",
+          "consumption": 15
+        },
+        {
+          "monthKey": "2026-02",
+          "month": "February 2026",
+          "consumption": 16
+        },
+        {
+          "monthKey": "2026-03",
+          "month": "March 2026",
+          "consumption": 15
+        },
+        {
+          "monthKey": "2026-04",
+          "month": "April 2026",
+          "consumption": 18
+        },
+        {
+          "monthKey": "2026-05",
+          "month": "May 2026",
+          "consumption": 17
+        }
+      ],
+      "forecast": null
+    },
+    {
+      "id": "HH-005",
+      "name": "Ana Reyes",
+      "username": "ana",
+      "email": "ana@email.com",
+      "barangay": "Tejero, General Trias, Cavite",
+      "accountType": "Residential — Standard",
+      "status": "Active",
+      "history": [
+        {
+          "monthKey": "2025-12",
+          "month": "December 2025",
+          "consumption": 17
+        },
+        {
+          "monthKey": "2026-01",
+          "month": "January 2026",
+          "consumption": 17
+        },
+        {
+          "monthKey": "2026-02",
+          "month": "February 2026",
+          "consumption": 18
+        },
+        {
+          "monthKey": "2026-03",
+          "month": "March 2026",
+          "consumption": 17
+        },
+        {
+          "monthKey": "2026-04",
+          "month": "April 2026",
+          "consumption": 20
+        },
+        {
+          "monthKey": "2026-05",
+          "month": "May 2026",
+          "consumption": 19
+        }
+      ],
+      "forecast": null
+    },
+    {
+      "id": "HH-006",
+      "name": "shadow",
+      "username": "shadow",
+      "email": "shadow@local",
+      "barangay": "",
+      "accountType": "Residential — Standard",
+      "status": "Active",
+      "history": [
+        {
+          "monthKey": "2025-12",
+          "month": "December 2025",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-01",
+          "month": "January 2026",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-02",
+          "month": "February 2026",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-03",
+          "month": "March 2026",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-04",
+          "month": "April 2026",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-05",
+          "month": "May 2026",
+          "consumption": 0
+        }
+      ],
+      "forecast": null
+    },
+    {
+      "id": "HH-007",
+      "name": "homeowner2",
+      "username": "homeowner2",
+      "email": "homeowner2@local",
+      "barangay": "",
+      "accountType": "Residential — Standard",
+      "status": "Active",
+      "history": [
+        {
+          "monthKey": "2025-12",
+          "month": "December 2025",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-01",
+          "month": "January 2026",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-02",
+          "month": "February 2026",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-03",
+          "month": "March 2026",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-04",
+          "month": "April 2026",
+          "consumption": 0
+        },
+        {
+          "monthKey": "2026-05",
+          "month": "May 2026",
+          "consumption": 0
+        }
+      ],
+      "forecast": null
+    }
+  ],
+  "users": [
+    {
+      "name": "Juan Dela Cruz",
+      "username": "juan",
+      "email": "juan@email.com",
+      "role": "resident",
+      "status": "Active",
+      "password": "password123"
+    },
+    {
+      "name": "Maria Santos",
+      "username": "maria",
+      "email": "maria@email.com",
+      "role": "resident",
+      "status": "Active",
+      "password": "password123"
+    },
+    {
+      "name": "Admin User",
+      "username": "admin",
+      "email": "admin@email.com",
+      "role": "admin",
+      "status": "Active",
+      "password": "admin123"
+    },
+    {
+      "name": "Pedro Garcia",
+      "username": "pedro",
+      "email": "pedro@email.com",
+      "role": "resident",
+      "status": "Inactive",
+      "password": "password123"
+    },
+    {
+      "name": "Ana Reyes",
+      "username": "ana",
+      "email": "ana@email.com",
+      "role": "resident",
+      "status": "Active",
+      "password": "password123"
+    },
+    {
+      "name": "shadow",
+      "username": "shadow",
+      "email": "shadow@local",
+      "role": "resident",
+      "status": "Active",
+      "password": "12345"
+    },
+    {
+      "name": "homeowner2",
+      "username": "homeowner2",
+      "email": "homeowner2@local",
+      "role": "resident",
+      "status": "Active",
+      "password": "homeowner34"
+    }
+  ],
+  "settings": {
+    "threshold": 25,
+    "emailAlerts": true,
+    "autoForecast": true
+  }
+}
