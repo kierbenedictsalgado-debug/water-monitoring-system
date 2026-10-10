@@ -3,7 +3,7 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { getDb } from "./db.js";
+import { getDb } from "./Db.js";
 import authRoutes from "./routes/auth.js";
 import householdRoutes from "./routes/households.js";
 import userRoutes from "./routes/users.js";

@@ -4,8 +4,11 @@ import { signToken } from "../middleware/auth.js";
 export default function authRoutes(db) {
   const router = Router();
 
+  // =========================================================
   // LOGIN
   // POST /api/auth/login
+  // =========================================================
+
   router.post("/login", async (req, res) => {
     try {
       const { username, password } = req.body || {};
@@ -16,33 +19,41 @@ export default function authRoutes(db) {
         });
       }
 
-      const cleanUsername = String(username).trim().toLowerCase();
+      const cleanUsername = String(username)
+        .trim()
+        .toLowerCase();
 
       const user = db.data.users.find(
         (u) =>
-          String(u.username || "").trim().toLowerCase() ===
-          cleanUsername
+          String(u.username || "")
+            .trim()
+            .toLowerCase() === cleanUsername
       );
 
+      // USER NOT FOUND OR WRONG PASSWORD
       if (!user || user.password !== password) {
         return res.status(401).json({
           error: "Invalid username or password.",
         });
       }
 
+      // INACTIVE ACCOUNT
       if (user.status !== "Active") {
         return res.status(403).json({
           error: "This account is inactive.",
         });
       }
 
-      const token = signToken(user);
-
-      const household = db.data.households.find(
+      // FIND HOUSEHOLD
+      const householdMatch = db.data.households.find(
         (h) =>
-          String(h.username || "").trim().toLowerCase() ===
-          cleanUsername
+          String(h.username || "")
+            .trim()
+            .toLowerCase() === cleanUsername
       );
+
+      // CREATE TOKEN
+      const token = signToken(user);
 
       return res.json({
         token,
@@ -50,25 +61,28 @@ export default function authRoutes(db) {
         user: {
           name: user.name,
           username: user.username,
-          email: user.email || "",
+          email: user.email,
           role: user.role,
         },
 
-        householdId: household
-          ? household.id
+        householdId: householdMatch
+          ? householdMatch.id
           : null,
       });
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("LOGIN ERROR:", error);
 
       return res.status(500).json({
-        error: "Internal server error.",
+        error: "Unable to log in.",
       });
     }
   });
 
+  // =========================================================
   // REGISTER
   // POST /api/auth/register
+  // =========================================================
+
   router.post("/register", async (req, res) => {
     try {
       const {
@@ -77,6 +91,7 @@ export default function authRoutes(db) {
         role = "resident",
       } = req.body || {};
 
+      // VALIDATION
       if (!username || !password) {
         return res.status(400).json({
           error: "Username and password are required.",
@@ -97,120 +112,39 @@ export default function authRoutes(db) {
         });
       }
 
-      // CHECK DUPLICATE USERNAME
+      // NORMALIZE ROLE
+      const cleanRole =
+        role === "admin" ? "admin" : "resident";
 
+      // CHECK DUPLICATE USERNAME
       const existingUser = db.data.users.find(
         (u) =>
-          String(u.username || "").trim().toLowerCase() ===
+          String(u.username || "")
+            .trim()
+            .toLowerCase() ===
           cleanUsername.toLowerCase()
       );
 
       if (existingUser) {
         return res.status(409).json({
-          message:
+          error:
             "Username already exists. Please choose another username.",
         });
       }
 
-      // ONLY ALLOW RESIDENT REGISTRATION FROM THE PUBLIC SIGNUP PAGE
-
-      const userRole =
-        role === "admin" ? "admin" : "resident";
-
       // CREATE USER
-
       const newUser = {
         name: cleanUsername,
         username: cleanUsername,
-        email: `${cleanUsername.toLowerCase()}@local`,
-        role: userRole,
+        email: `${cleanUsername}@local`,
+        role: cleanRole,
         status: "Active",
         password,
       };
 
       db.data.users.push(newUser);
 
-      // CREATE HOUSEHOLD FOR RESIDENT
-
-      let householdId = null;
-
-      if (userRole === "resident") {
-        const numbers = db.data.households
-          .map((h) => {
-            const match = String(h.id).match(
-              /^HH-(\d+)$/
-            );
-
-            return match
-              ? Number(match[1])
-              : 0;
-          })
-          .filter((n) => Number.isFinite(n));
-
-        const nextNumber =
-          numbers.length > 0
-            ? Math.max(...numbers) + 1
-            : 1;
-
-        householdId = `HH-${String(
-          nextNumber
-        ).padStart(3, "0")}`;
-
-        db.data.households.push({
-          id: householdId,
-
-          name: cleanUsername,
-
-          username: cleanUsername,
-
-          email: `${cleanUsername.toLowerCase()}@local`,
-
-          barangay: "",
-
-          accountType:
-            "Residential — Standard",
-
-          status: "Active",
-
-          history: [
-            {
-              monthKey: "2025-12",
-              month: "December 2025",
-              consumption: 0,
-            },
-            {
-              monthKey: "2026-01",
-              month: "January 2026",
-              consumption: 0,
-            },
-            {
-              monthKey: "2026-02",
-              month: "February 2026",
-              consumption: 0,
-            },
-            {
-              monthKey: "2026-03",
-              month: "March 2026",
-              consumption: 0,
-            },
-            {
-              monthKey: "2026-04",
-              month: "April 2026",
-              consumption: 0,
-            },
-            {
-              monthKey: "2026-05",
-              month: "May 2026",
-              consumption: 0,
-            },
-          ],
-
-          forecast: null,
-        });
-      }
-
       // SAVE DATABASE
-
       await db.write();
 
       console.log(
@@ -218,8 +152,7 @@ export default function authRoutes(db) {
       );
 
       return res.status(201).json({
-        message:
-          "Account created successfully.",
+        message: "Account created successfully.",
 
         user: {
           name: newUser.name,
@@ -227,33 +160,44 @@ export default function authRoutes(db) {
           email: newUser.email,
           role: newUser.role,
         },
-
-        householdId,
       });
     } catch (error) {
-      console.error(
-        "Registration error:",
-        error
-      );
+      console.error("REGISTER ERROR:", error);
 
       return res.status(500).json({
-        error: "Internal server error.",
+        error: "Unable to create account.",
+        message: error.message,
       });
     }
   });
 
+  // =========================================================
   // DEMO ACCOUNTS
+  // GET /api/auth/demo-accounts
+  // =========================================================
 
   router.get("/demo-accounts", (req, res) => {
-    return res.json(
-      db.data.users.map((u) => ({
-        name: u.name,
-        username: u.username,
-        email: u.email || "",
-        role: u.role,
-        password: u.password,
-      }))
-    );
+    try {
+      return res.json(
+        db.data.users.map((u) => ({
+          name: u.name,
+          username: u.username,
+          email: u.email,
+          role: u.role,
+          password: u.password,
+          status: u.status,
+        }))
+      );
+    } catch (error) {
+      console.error(
+        "DEMO ACCOUNTS ERROR:",
+        error
+      );
+
+      return res.status(500).json({
+        error: "Unable to load demo accounts.",
+      });
+    }
   });
 
   return router;

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { requireAuth, requireAdmin } from '../middleware/auth.js';
 import { analyticsFor, nextMonthLabel } from './households.js';
 import { forecastNext } from '../forecast.js';
-import { resetDb } from '../db.js';
+import { resetDb } from '../Db.js';
 
 export default function miscRoutes(db) {
   const router = Router();
