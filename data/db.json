@@ -68,7 +68,7 @@
           "monthKey": "2026-10",
           "month": "October 2026",
           "consumption": 109.864,
-          "lastUpdated": "2026-10-11T16:35:55.251Z"
+          "lastUpdated": "2026-10-11T16:36:06.263Z"
         }
       ],
       "forecast": null,
@@ -85,7 +85,7 @@
           "monthKey": "2026-10",
           "consumption": 4.791000000000011,
           "monthToDate": 109.864,
-          "lastUpdated": "2026-10-11T16:35:55.251Z"
+          "lastUpdated": "2026-10-11T16:36:06.263Z"
         }
       ]
     }
