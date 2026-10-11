@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth.js";
 import householdRoutes from "./routes/households.js";
 import userRoutes from "./routes/users.js";
 import miscRoutes from "./routes/misc.js";
+import sensorRoutes from "./sensor.js";
 
 // Path and server configuration
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -31,7 +32,7 @@ app.use("/api/auth", authRoutes(db));
 app.use("/api/households", householdRoutes(db));
 app.use("/api/users", userRoutes(db));
 app.use("/api", miscRoutes(db));
-
+app.use("/api/sensor", sensorRoutes(db));
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({

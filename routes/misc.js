@@ -7,6 +7,23 @@ import { resetDb } from '../Db.js';
 export default function miscRoutes(db) {
   const router = Router();
 
+  
+  // ---- Consumption history ----
+  router.get('/consumption', requireAuth, (req, res) => {
+    const households = db.data.households || [];
+
+    const records = households.flatMap((household) =>
+      (household.history || []).map((record) => ({
+        ...record,
+        household_id: household.id,
+        household_name: household.name
+      }))
+    );
+
+    res.json(records);
+  });
+
+
   // ---- Settings ----
   router.get('/settings', requireAuth, (req, res) => res.json(db.data.settings));
 

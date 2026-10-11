@@ -8,38 +8,7 @@
       "barangay": "Bacao II, General Trias, Cavite",
       "accountType": "Residential — Standard",
       "status": "Active",
-      "history": [
-        {
-          "monthKey": "2025-12",
-          "month": "December 2025",
-          "consumption": 16
-        },
-        {
-          "monthKey": "2026-01",
-          "month": "January 2026",
-          "consumption": 19
-        },
-        {
-          "monthKey": "2026-02",
-          "month": "February 2026",
-          "consumption": 17
-        },
-        {
-          "monthKey": "2026-03",
-          "month": "March 2026",
-          "consumption": 18
-        },
-        {
-          "monthKey": "2026-04",
-          "month": "April 2026",
-          "consumption": 22
-        },
-        {
-          "monthKey": "2026-05",
-          "month": "May 2026",
-          "consumption": 20
-        }
-      ],
+      "history": [],
       "forecast": null
     },
     {
@@ -50,38 +19,7 @@
       "barangay": "Bacao II, General Trias, Cavite",
       "accountType": "Residential — Standard",
       "status": "Active",
-      "history": [
-        {
-          "monthKey": "2025-12",
-          "month": "December 2025",
-          "consumption": 15
-        },
-        {
-          "monthKey": "2026-01",
-          "month": "January 2026",
-          "consumption": 16
-        },
-        {
-          "monthKey": "2026-02",
-          "month": "February 2026",
-          "consumption": 17
-        },
-        {
-          "monthKey": "2026-03",
-          "month": "March 2026",
-          "consumption": 16
-        },
-        {
-          "monthKey": "2026-04",
-          "month": "April 2026",
-          "consumption": 19
-        },
-        {
-          "monthKey": "2026-05",
-          "month": "May 2026",
-          "consumption": 18
-        }
-      ],
+      "history": [],
       "forecast": null
     },
     {
@@ -92,38 +30,7 @@
       "barangay": "Bacao I, General Trias, Cavite",
       "accountType": "Residential — Standard",
       "status": "Active",
-      "history": [
-        {
-          "monthKey": "2025-12",
-          "month": "December 2025",
-          "consumption": 18
-        },
-        {
-          "monthKey": "2026-01",
-          "month": "January 2026",
-          "consumption": 20
-        },
-        {
-          "monthKey": "2026-02",
-          "month": "February 2026",
-          "consumption": 19
-        },
-        {
-          "monthKey": "2026-03",
-          "month": "March 2026",
-          "consumption": 21
-        },
-        {
-          "monthKey": "2026-04",
-          "month": "April 2026",
-          "consumption": 23
-        },
-        {
-          "monthKey": "2026-05",
-          "month": "May 2026",
-          "consumption": 22
-        }
-      ],
+      "history": [],
       "forecast": null
     },
     {
@@ -134,38 +41,7 @@
       "barangay": "Bacao I, General Trias, Cavite",
       "accountType": "Residential — Standard",
       "status": "Inactive",
-      "history": [
-        {
-          "monthKey": "2025-12",
-          "month": "December 2025",
-          "consumption": 14
-        },
-        {
-          "monthKey": "2026-01",
-          "month": "January 2026",
-          "consumption": 15
-        },
-        {
-          "monthKey": "2026-02",
-          "month": "February 2026",
-          "consumption": 16
-        },
-        {
-          "monthKey": "2026-03",
-          "month": "March 2026",
-          "consumption": 15
-        },
-        {
-          "monthKey": "2026-04",
-          "month": "April 2026",
-          "consumption": 18
-        },
-        {
-          "monthKey": "2026-05",
-          "month": "May 2026",
-          "consumption": 17
-        }
-      ],
+      "history": [],
       "forecast": null
     },
     {
@@ -176,123 +52,42 @@
       "barangay": "Tejero, General Trias, Cavite",
       "accountType": "Residential — Standard",
       "status": "Active",
-      "history": [
-        {
-          "monthKey": "2025-12",
-          "month": "December 2025",
-          "consumption": 17
-        },
-        {
-          "monthKey": "2026-01",
-          "month": "January 2026",
-          "consumption": 17
-        },
-        {
-          "monthKey": "2026-02",
-          "month": "February 2026",
-          "consumption": 18
-        },
-        {
-          "monthKey": "2026-03",
-          "month": "March 2026",
-          "consumption": 17
-        },
-        {
-          "monthKey": "2026-04",
-          "month": "April 2026",
-          "consumption": 20
-        },
-        {
-          "monthKey": "2026-05",
-          "month": "May 2026",
-          "consumption": 19
-        }
-      ],
+      "history": [],
       "forecast": null
     },
     {
-      "id": "HH-006",
-      "name": "shadow",
-      "username": "shadow",
-      "email": "shadow@local",
+      "id": "HH-ESP32-001",
+      "name": "ESP32-001 Water Sensor",
+      "username": "ESP32-001",
+      "email": "",
       "barangay": "",
       "accountType": "Residential — Standard",
       "status": "Active",
       "history": [
         {
-          "monthKey": "2025-12",
-          "month": "December 2025",
-          "consumption": 0
-        },
-        {
-          "monthKey": "2026-01",
-          "month": "January 2026",
-          "consumption": 0
-        },
-        {
-          "monthKey": "2026-02",
-          "month": "February 2026",
-          "consumption": 0
-        },
-        {
-          "monthKey": "2026-03",
-          "month": "March 2026",
-          "consumption": 0
-        },
-        {
-          "monthKey": "2026-04",
-          "month": "April 2026",
-          "consumption": 0
-        },
-        {
-          "monthKey": "2026-05",
-          "month": "May 2026",
-          "consumption": 0
+          "monthKey": "2026-10",
+          "month": "October 2026",
+          "consumption": 109.864,
+          "lastUpdated": "2026-10-11T16:33:05.248Z"
         }
       ],
-      "forecast": null
-    },
-    {
-      "id": "HH-007",
-      "name": "homeowner2",
-      "username": "homeowner2",
-      "email": "homeowner2@local",
-      "barangay": "",
-      "accountType": "Residential — Standard",
-      "status": "Active",
-      "history": [
+      "forecast": null,
+      "dailyHistory": [
         {
-          "monthKey": "2025-12",
-          "month": "December 2025",
-          "consumption": 0
+          "date": "2026-10-11",
+          "monthKey": "2026-10",
+          "consumption": 105.073,
+          "monthToDate": 105.073,
+          "lastUpdated": "2026-10-11T15:59:53.778Z"
         },
         {
-          "monthKey": "2026-01",
-          "month": "January 2026",
-          "consumption": 0
-        },
-        {
-          "monthKey": "2026-02",
-          "month": "February 2026",
-          "consumption": 0
-        },
-        {
-          "monthKey": "2026-03",
-          "month": "March 2026",
-          "consumption": 0
-        },
-        {
-          "monthKey": "2026-04",
-          "month": "April 2026",
-          "consumption": 0
-        },
-        {
-          "monthKey": "2026-05",
-          "month": "May 2026",
-          "consumption": 0
+          "date": "2026-10-12",
+          "monthKey": "2026-10",
+          "consumption": 4.791000000000011,
+          "monthToDate": 109.864,
+          "lastUpdated": "2026-10-11T16:33:05.248Z"
         }
-      ],
-      "forecast": null
+      ]
     }
   ],
   "users": [
@@ -343,14 +138,6 @@
       "role": "resident",
       "status": "Active",
       "password": "12345"
-    },
-    {
-      "name": "homeowner2",
-      "username": "homeowner2",
-      "email": "homeowner2@local",
-      "role": "resident",
-      "status": "Active",
-      "password": "homeowner34"
     }
   ],
   "settings": {

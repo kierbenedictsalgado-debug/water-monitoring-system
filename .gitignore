@@ -1,0 +1,9 @@
+# Node.js dependencies
+node_modules/
+
+# PlatformIO generated files
+ESP32_WaterSensor/.pio/
+ESP32_WaterSensor/.vscode/
+
+# Environment secrets
+.env

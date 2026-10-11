@@ -1952,3 +1952,387 @@ select:focus {
 .password-toggle:hover {
   color: #08a6b8;
 }
+
+/* =================================
+   CONSUMPTION ANALYTICS
+================================= */
+
+.analytics-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.analytics-note {
+  margin: 8px 0 0;
+  color: #718096;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.analytics-latest {
+  font-size: clamp(20px, 2vw, 28px) !important;
+}
+
+.analytics-panel {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.analytics-panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.analytics-panel-heading > svg {
+  flex-shrink: 0;
+  color: #168a91;
+}
+
+.analytics-panel-heading .muted {
+  margin: 7px 0 0;
+  line-height: 1.6;
+}
+
+.analytics-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 190px;
+  padding: 24px;
+  text-align: center;
+  color: #64748b;
+}
+
+.analytics-empty svg {
+  color: #168a91;
+}
+
+.analytics-empty strong {
+  color: #334155;
+}
+
+.analytics-empty p {
+  max-width: 440px;
+  margin: 0;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* MONTHLY BAR CHART */
+
+.consumption-chart {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 12px;
+  min-height: 240px;
+  padding: 18px 4px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.chart-column {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  max-width: 100px;
+}
+
+.chart-value {
+  min-height: 22px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.chart-bar-area {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+  min-height: 150px;
+  margin-top: 8px;
+}
+
+.chart-bar {
+  width: min(54px, 72%);
+  min-height: 3px;
+  border-radius: 7px 7px 0 0;
+  background: #168a91;
+  transition: height 0.3s ease;
+}
+
+.chart-label {
+  width: 100%;
+  min-height: 38px;
+  padding: 10px 2px;
+  color: #64748b;
+  font-size: 12px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.chart-unit {
+  margin-top: 12px;
+  color: #718096;
+  font-size: 12px;
+}
+
+/* MONTHLY COMPARISON */
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.comparison-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.comparison-item span {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.comparison-item strong {
+  color: #1e293b;
+  font-size: clamp(18px, 2vw, 25px);
+  overflow-wrap: anywhere;
+}
+
+.comparison-item small {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.change-increase {
+  color: #c2410c !important;
+}
+
+.change-decrease {
+  color: #15803d !important;
+}
+
+/* SMART RECOMMENDATIONS */
+
+.smart-recommendations {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.smart-recommendation {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.smart-recommendation.warning {
+  border-left: 4px solid #ea580c;
+  background: #fffaf5;
+}
+
+.smart-recommendation.good {
+  border-left: 4px solid #16a34a;
+  background: #f5fff7;
+}
+
+.smart-recommendation.info {
+  border-left: 4px solid #168a91;
+}
+
+.recommendation-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #e6f5f5;
+  color: #168a91;
+}
+
+.smart-recommendation.warning .recommendation-icon {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.smart-recommendation.good .recommendation-icon {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.recommendation-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.recommendation-content > strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #1e293b;
+  line-height: 1.5;
+}
+
+.recommendation-content p {
+  margin: 0 0 9px;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.recommendation-content small {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* =================================
+   RESPONSIVE LAYOUT
+================================= */
+
+@media (max-width: 900px) {
+  .comparison-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .comparison-item:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .analytics-dashboard {
+    gap: 14px;
+  }
+
+  .analytics-panel {
+    padding: 16px;
+  }
+
+  .analytics-panel-heading {
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .analytics-panel-heading .card-title {
+    font-size: 17px;
+    line-height: 1.4;
+  }
+
+  .analytics-panel-heading .muted {
+    font-size: 13px;
+  }
+
+  .consumption-chart {
+    gap: 5px;
+    min-height: 205px;
+    padding-top: 12px;
+  }
+
+  .chart-bar-area {
+    min-height: 125px;
+  }
+
+  .chart-bar {
+    width: 65%;
+  }
+
+  .chart-label {
+    font-size: 10px;
+    min-height: 42px;
+  }
+
+  .chart-value {
+    font-size: 10px;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .comparison-item:last-child {
+    grid-column: auto;
+  }
+
+  .comparison-item {
+    padding: 13px;
+  }
+
+  .smart-recommendation {
+    gap: 10px;
+    padding: 13px;
+  }
+
+  .recommendation-icon {
+    width: 33px;
+    height: 33px;
+  }
+
+  .recommendation-content p {
+    font-size: 13px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .stat-card {
+    min-width: 0;
+    padding: 13px;
+  }
+
+  .stat-value {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 360px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-panel {
+    padding: 12px;
+  }
+
+  .analytics-panel-heading > svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .smart-recommendation {
+    flex-direction: column;
+  }
+}

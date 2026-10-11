@@ -20,11 +20,10 @@ import {
 import "./App.css";
 
 import Consumption from "./Pages/Homeowner/Consumption";
-import Forecast from "./Pages/Homeowner/Forecast";
+import Forecast from "./Pages/Homeowner/Forecasting";
+import Dashboard from "./Pages/Homeowner/Dashboard";
 
 const API = "http://localhost:4000";
-
-// RESIDENT NAVIGATION
 
 const residentNav = [
   ["dashboard", "Dashboard", Home],
@@ -32,8 +31,6 @@ const residentNav = [
   ["forecast", "Forecast", TrendingUp],
   ["tips", "Water-Saving Tips", Lightbulb],
 ];
-
-// ADMIN NAVIGATION
 
 const adminNav = [
   ["dashboard", "Dashboard", Home],
@@ -45,86 +42,62 @@ const adminNav = [
   ["settings", "System Settings", Settings],
 ];
 
-// CARD
-
 function Card({ children, className = "" }) {
-  return (
-    <div className={`card ${className}`}>
-      {children}
-    </div>
-  );
+  return <div className={`card ${className}`}>{children}</div>;
 }
 
-// LOGIN AND SIGN UP
-
+// ============================================================
+// SECTION 1: LOGIN AND SIGNUP
+// ============================================================
 function Landing({ onLogin }) {
   const [mode, setMode] = useState("login");
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState(false);
-
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const clearMessages = () => {
+  function clearMessages() {
     setError("");
     setSuccess("");
-  };
+  }
 
-  const switchMode = (newMode) => {
+  function switchMode(newMode) {
     setMode(newMode);
-
     setUsername("");
     setPassword("");
     setConfirmPassword("");
-
     setShowPassword(false);
     setShowConfirmPassword(false);
-
     clearMessages();
-  };
+  }
 
-  // LOGIN PAGE
-
-  const handleLogin = async (e) => {
+  // LOGIN: Authenticate against the backend.
+  async function handleLogin(e) {
     e.preventDefault();
-
     clearMessages();
 
     const cleanUsername = username.trim();
 
-    if (!cleanUsername) {
-      setError("Please enter your username.");
-      return;
-    }
-
-    if (!password) {
-      setError("Please enter your password.");
+    if (!cleanUsername || !password) {
+      setError("Please enter your username and password.");
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `${API}/api/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: cleanUsername,
-            password,
-          }),
-        }
-      );
+      const response = await fetch(`${API}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: cleanUsername,
+          password,
+        }),
+      });
 
       let data = {};
 
@@ -134,97 +107,53 @@ function Landing({ onLogin }) {
         data = {};
       }
 
-      // WRONG USERNAME OR PASSWORD
-
-      if (response.status === 401 || response.status === 403) {
-        setError("Incorrect username or password.");
-        return;
-      }
-
       if (!response.ok) {
         setError(
-          data.message ||
-            data.error ||
-            "Incorrect username or password."
+          response.status === 401 || response.status === 403
+            ? "Incorrect username or password."
+            : data.message ||
+                data.error ||
+                "Unable to log in. Please try again."
         );
         return;
       }
 
-      // CHECK LOGIN RESPONSE
-
-      if (!data.user) {
-        setError("Incorrect username or password.");
+      if (!data.user || !["admin", "resident"].includes(data.user.role)) {
+        setError("The server did not return valid user information.");
         return;
       }
 
-      if (!data.user.role) {
-        setError("Login failed: user role was not provided.");
-        return;
-      }
-
-      // LOGIN SUCCESS
-
-      onLogin(data.user);
-
+      onLogin({
+        ...data.user,
+        token: data.token ?? data.user.token ?? null,
+        householdId:
+          data.householdId ?? data.user.householdId ?? null,
+      });
     } catch (err) {
-      console.error("Login error:", err);
+      console.error("Login request failed:", err);
 
-      // ONLY SHOW THIS WHEN SERVER CANNOT BE REACHED
-
-      if (
-        err.name === "TypeError" ||
-        err.message === "Failed to fetch"
-      ) {
-        setError(
-          "Cannot connect to the server. Please make sure the backend is running."
-        );
-      } else {
-        setError(
-          "Unable to log in. Please try again."
-        );
-      }
+      setError(
+        "Cannot connect to the server. Make sure the backend is running."
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  // SIGN UP PAGE
-
-  const handleSignup = async (e) => {
+  // SIGNUP: Register a new resident account.
+  async function handleSignup(e) {
     e.preventDefault();
-
     clearMessages();
 
     const cleanUsername = username.trim();
 
-    if (!cleanUsername) {
-      setError("Please enter a username.");
-      return;
-    }
-
     if (cleanUsername.length < 3) {
-      setError(
-        "Username must be at least 3 characters."
-      );
-      return;
-    }
-
-    if (!password) {
-      setError("Please create a password.");
+      setError("Username must be at least 3 characters.");
       return;
     }
 
     if (password.length < 4) {
-      setError(
-        "Password must be at least 4 characters."
-      );
-      return;
-    }
-
-    if (!confirmPassword) {
-      setError(
-        "Please confirm your password."
-      );
+      setError("Password must be at least 4 characters.");
       return;
     }
 
@@ -236,20 +165,15 @@ function Landing({ onLogin }) {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `${API}/api/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: cleanUsername,
-            password,
-            role: "resident",
-          }),
-        }
-      );
+      const response = await fetch(`${API}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: cleanUsername,
+          password,
+          role: "resident",
+        }),
+      });
 
       let data = {};
 
@@ -259,161 +183,91 @@ function Landing({ onLogin }) {
         data = {};
       }
 
-      // USERNAME ALREADY EXISTS
-
-      if (response.status === 409) {
-        setError(
-          data.message ||
-            "Username already exists. Please choose another username."
-        );
-        return;
-      }
-
       if (!response.ok) {
         setError(
           data.message ||
             data.error ||
-            "Unable to create account."
+            (response.status === 409
+              ? "Username already exists."
+              : "Unable to create account.")
         );
         return;
       }
 
-      // ACCOUNT CREATED
-
-      setSuccess(
-        "Account created successfully! Please sign in."
-      );
-
+      setMode("login");
+      setUsername(cleanUsername);
       setPassword("");
       setConfirmPassword("");
-
-      setTimeout(() => {
-        setMode("login");
-        setError("");
-        setSuccess(
-          "Account created successfully. Please sign in."
-        );
-      }, 1200);
-
+      setShowPassword(false);
+      setShowConfirmPassword(false);
+      setSuccess("Account created successfully! Please sign in.");
     } catch (err) {
-      console.error(
-        "Registration error:",
-        err
-      );
+      console.error("Registration request failed:", err);
 
-      if (
-        err.name === "TypeError" ||
-        err.message === "Failed to fetch"
-      ) {
-        setError(
-          "Cannot connect to the server. Please make sure the backend is running."
-        );
-      } else {
-        setError(
-          "Unable to create account. Please try again."
-        );
-      }
+      setError(
+        "Cannot connect to the server. Make sure the backend is running."
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <div className="landing">
-
       <div className="login-card">
-
-        {/* APP ICON */}
-
         <div className="login-logo">
           <Droplets size={34} />
         </div>
 
-        {/* SYSTEM TITLE */}
-
-        <h1>
-          Water Monitoring System
-        </h1>
+        <h1>Water Monitoring System</h1>
 
         <p className="login-subtitle">
           Smart household water consumption monitoring
         </p>
 
-        {/* LOGIN PAGE */}
-
-        {mode === "login" && (
+        {mode === "login" ? (
           <>
-            <div className="landing-heading">
-              Welcome Back
-            </div>
+            <div className="landing-heading">Welcome Back</div>
 
             <p className="landing-description">
-              Sign in to monitor your household water
-              consumption.
+              Sign in to monitor your household water consumption.
             </p>
 
-            <form
-              className="login-form"
-              onSubmit={handleLogin}
-            >
-
-              {/* USERNAME */}
-
-              <label htmlFor="login-username">
-                Username
-              </label>
+            <form className="login-form" onSubmit={handleLogin}>
+              <label htmlFor="login-username">Username</label>
 
               <input
                 id="login-username"
                 type="text"
                 value={username}
-                onChange={(e) =>
-                  setUsername(e.target.value)
-                }
+                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter your username"
                 autoComplete="username"
                 disabled={loading}
+                required
               />
 
-              {/* PASSWORD */}
-
-              <label htmlFor="login-password">
-                Password
-              </label>
+              <label htmlFor="login-password">Password</label>
 
               <div className="password-field">
-
                 <input
                   id="login-password"
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) =>
-                    setPassword(e.target.value)
-                  }
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   autoComplete="current-password"
                   disabled={loading}
+                  required
                 />
-
-                {/* SHOW / HIDE PASSWORD */}
 
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() =>
-                    setShowPassword(
-                      !showPassword
-                    )
-                  }
+                  onClick={() => setShowPassword((v) => !v)}
                   disabled={loading}
                   aria-label={
-                    showPassword
-                      ? "Hide password"
-                      : "Show password"
+                    showPassword ? "Hide password" : "Show password"
                   }
                 >
                   {showPassword ? (
@@ -422,137 +276,88 @@ function Landing({ onLogin }) {
                     <Eye size={18} />
                   )}
                 </button>
-
               </div>
 
-              {/* LOGIN ERROR */}
-
               {error && (
-                <div className="login-error">
+                <div className="login-error" role="alert">
                   {error}
                 </div>
               )}
 
-              {/* LOGIN SUCCESS */}
-
               {success && (
-                <div className="login-success">
+                <div className="login-success" role="status">
                   {success}
                 </div>
               )}
-
-              {/* LOGIN BUTTON */}
 
               <button
                 type="submit"
                 className="login-button"
                 disabled={loading}
               >
-                {loading
-                  ? "Signing in..."
-                  : "Sign In"}
+                {loading ? "Signing in..." : "Sign In"}
               </button>
-
             </form>
 
-            {/* GO TO SIGN UP */}
-
             <div className="signup-prompt">
-
-              <span>
-                Don't have an account?
-              </span>
+              <span>Don't have an account?</span>
 
               <button
                 type="button"
                 className="signup-link"
-                onClick={() =>
-                  switchMode("signup")
-                }
+                onClick={() => switchMode("signup")}
                 disabled={loading}
               >
                 Sign Up
               </button>
-
             </div>
           </>
-        )}
-
-        {/* SIGN UP PAGE */}
-
-        {mode === "signup" && (
+        ) : (
           <>
-            <div className="landing-heading">
-              Create Your Account
-            </div>
+            <div className="landing-heading">Create Your Account</div>
 
             <p className="landing-description">
-              Create a simple homeowner account to
-              monitor your household water consumption.
+              Create a homeowner account to monitor your household water
+              consumption.
             </p>
 
-            <form
-              className="login-form"
-              onSubmit={handleSignup}
-            >
-
-              {/* USERNAME */}
-
-              <label htmlFor="signup-username">
-                Username
-              </label>
+            <form className="login-form" onSubmit={handleSignup}>
+              <label htmlFor="signup-username">Username</label>
 
               <input
                 id="signup-username"
                 type="text"
                 value={username}
-                onChange={(e) =>
-                  setUsername(e.target.value)
-                }
+                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Choose a username"
                 autoComplete="username"
                 disabled={loading}
+                minLength={3}
+                required
               />
 
-              {/* PASSWORD */}
-
-              <label htmlFor="signup-password">
-                Password
-              </label>
+              <label htmlFor="signup-password">Password</label>
 
               <div className="password-field">
-
                 <input
                   id="signup-password"
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) =>
-                    setPassword(e.target.value)
-                  }
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Create a password"
                   autoComplete="new-password"
                   disabled={loading}
+                  minLength={4}
+                  required
                 />
-
-                {/* SHOW / HIDE PASSWORD */}
 
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() =>
-                    setShowPassword(
-                      !showPassword
-                    )
-                  }
+                  onClick={() => setShowPassword((v) => !v)}
                   disabled={loading}
                   aria-label={
-                    showPassword
-                      ? "Hide password"
-                      : "Show password"
+                    showPassword ? "Hide password" : "Show password"
                   }
                 >
                   {showPassword ? (
@@ -561,50 +366,29 @@ function Landing({ onLogin }) {
                     <Eye size={18} />
                   )}
                 </button>
-
               </div>
 
-              {/* CONFIRM PASSWORD */}
-
-              <label htmlFor="signup-confirm">
-                Confirm Password
-              </label>
+              <label htmlFor="signup-confirm">Confirm Password</label>
 
               <div className="password-field">
-
                 <input
                   id="signup-confirm"
-                  type={
-                    showConfirmPassword
-                      ? "text"
-                      : "password"
-                  }
+                  type={showConfirmPassword ? "text" : "password"}
                   value={confirmPassword}
-                  onChange={(e) =>
-                    setConfirmPassword(
-                      e.target.value
-                    )
-                  }
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Enter your password again"
                   autoComplete="new-password"
                   disabled={loading}
+                  required
                 />
-
-                {/* SHOW / HIDE CONFIRM PASSWORD */}
 
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() =>
-                    setShowConfirmPassword(
-                      !showConfirmPassword
-                    )
-                  }
+                  onClick={() => setShowConfirmPassword((v) => !v)}
                   disabled={loading}
                   aria-label={
-                    showConfirmPassword
-                      ? "Hide password"
-                      : "Show password"
+                    showConfirmPassword ? "Hide password" : "Show password"
                   }
                 >
                   {showConfirmPassword ? (
@@ -613,70 +397,51 @@ function Landing({ onLogin }) {
                     <Eye size={18} />
                   )}
                 </button>
-
               </div>
 
-              {/* SIGN UP ERROR */}
-
               {error && (
-                <div className="login-error">
+                <div className="login-error" role="alert">
                   {error}
                 </div>
               )}
 
-              {/* SIGN UP SUCCESS */}
-
               {success && (
-                <div className="login-success">
+                <div className="login-success" role="status">
                   {success}
                 </div>
               )}
-
-              {/* CREATE ACCOUNT BUTTON */}
 
               <button
                 type="submit"
                 className="login-button"
                 disabled={loading}
               >
-                {loading
-                  ? "Creating Account..."
-                  : "Create Account"}
+                {loading ? "Creating Account..." : "Create Account"}
               </button>
-
             </form>
 
-            {/* GO TO LOGIN */}
-
             <div className="signup-prompt">
-
-              <span>
-                Already have an account?
-              </span>
+              <span>Already have an account?</span>
 
               <button
                 type="button"
                 className="signup-link"
-                onClick={() =>
-                  switchMode("login")
-                }
+                onClick={() => switchMode("login")}
                 disabled={loading}
               >
                 Sign In
               </button>
-
             </div>
           </>
         )}
-
       </div>
-
     </div>
   );
 }
 
-// SIDEBAR
-
+// ============================================================
+// SECTION 2: SIDEBAR
+// ============================================================
 function Sidebar({
   role,
   tab,
@@ -685,702 +450,398 @@ function Sidebar({
   mobileOpen,
   setMobileOpen,
 }) {
-  const nav =
-    role === "admin"
-      ? adminNav
-      : residentNav;
+  const nav = role === "admin" ? adminNav : residentNav;
 
   return (
-    <aside
-      className={`sidebar ${
-        mobileOpen ? "open" : ""
-      }`}
-    >
-
-      {/* BRAND */}
-
-      <div className="side-brand">
-
-        <div className="brand-drop small">
-          <Droplets size={20} />
-        </div>
-
-        <div className="brand-text">
-
-          <div className="brand-name">
-            Water Monitoring
-          </div>
-
-          <div className="side-tag">
-            {role === "admin"
-              ? "Administrator Portal"
-              : "Homeowner Portal"}
-          </div>
-
-        </div>
-
-        {/* MOBILE CLOSE */}
-
+    <>
+      {mobileOpen && (
         <button
           type="button"
-          className="mobile-close"
-          onClick={() =>
-            setMobileOpen(false)
-          }
-        >
-          <X size={18} />
-        </button>
+          className="sidebar-overlay"
+          aria-label="Close navigation menu"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
 
-      </div>
+      <aside className={`sidebar ${mobileOpen ? "open" : ""}`}>
+        <div className="side-brand">
+          <div className="brand-drop small">
+            <Droplets size={20} />
+          </div>
 
-      {/* MENU */}
+          <div className="brand-text">
+            <div className="brand-name">Water Monitoring</div>
+            <div className="side-tag">
+              {role === "admin"
+                ? "Administrator Portal"
+                : "Homeowner Portal"}
+            </div>
+          </div>
 
-      <div className="menu-label">
-        MENU
-      </div>
+          <button
+            type="button"
+            className="mobile-close"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
+        </div>
 
-      {nav.map(
-        ([id, label, Icon]) => (
+        <div className="menu-label">MENU</div>
+
+        {nav.map(([id, label, Icon]) => (
           <button
             type="button"
             key={id}
-            className={`nav-item ${
-              tab === id
-                ? "active"
-                : ""
-            }`}
+            className={`nav-item ${tab === id ? "active" : ""}`}
             onClick={() => {
               setTab(id);
               setMobileOpen(false);
             }}
           >
             <Icon size={17} />
-
-            <span>
-              {label}
-            </span>
+            <span>{label}</span>
           </button>
-        )
-      )}
+        ))}
 
-      {/* LOGOUT */}
-
-      <div className="sidebar-bottom">
-
-        <button
-          type="button"
-          className="nav-item"
-          onClick={onLogout}
-        >
-          <LogOut size={17} />
-
-          <span>
-            Logout
-          </span>
-        </button>
-
-      </div>
-
-    </aside>
+        <div className="sidebar-bottom">
+          <button type="button" className="nav-item" onClick={onLogout}>
+            <LogOut size={17} />
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
 
-// TOPBAR
-
-function Topbar({
-  role,
-  setMobileOpen,
-  apiOk,
-}) {
+// ============================================================
+// SECTION 3: TOPBAR
+// ============================================================
+function Topbar({ role, setMobileOpen, apiOk }) {
   return (
     <header className="topbar">
-
-      {/* MOBILE MENU */}
-
       <button
         type="button"
         className="menu-button"
-        onClick={() =>
-          setMobileOpen(true)
-        }
+        onClick={() => setMobileOpen(true)}
+        aria-label="Open navigation menu"
       >
         <Menu size={20} />
       </button>
 
-      {/* BREADCRUMB */}
-
       <div className="breadcrumb">
-        {role === "admin"
-          ? "Administrator Portal"
-          : "Homeowner Portal"}
+        {role === "admin" ? "Administrator Portal" : "Homeowner Portal"}
       </div>
 
-      {/* TOP ACTIONS */}
-
       <div className="top-actions">
-
-        {/* API STATUS */}
-
-        <div
-          className={`api-status ${
-            apiOk
-              ? "connected"
-              : ""
-          }`}
-        >
-          <span></span>
-
-          {apiOk
-            ? "API Connected"
-            : "API Offline"}
+        <div className={`api-status ${apiOk ? "connected" : ""}`}>
+          <span />
+          {apiOk ? "API Connected" : "API Offline"}
         </div>
-
-        {/* NOTIFICATION */}
 
         <button
           type="button"
           className="icon-button"
+          aria-label="Notifications"
+          title="Notifications"
         >
           <Bell size={18} />
         </button>
 
-        {/* AVATAR */}
-
-        <div className="avatar">
-          {role === "admin"
-            ? "AD"
-            : "HO"}
-        </div>
-
+        <div className="avatar">{role === "admin" ? "AD" : "HO"}</div>
       </div>
-
     </header>
   );
 }
 
-// DASHBOARD
-
-function Dashboard() {
-  const records = JSON.parse(
-    localStorage.getItem(
-      "waterConsumptionRecords"
-    ) || "[]"
-  );
-
-  const consumption =
-    records.length > 0
-      ? records[0].consumption
-      : 0;
-
-  const total =
-    records.reduce(
-      (sum, record) =>
-        sum +
-        Number(
-          record.consumption || 0
-        ),
-      0
-    );
-
-  const average =
-    records.length > 0
-      ? total / records.length
-      : 0;
-
-  return (
-    <div>
-
-      {/* DASHBOARD STATISTICS */}
-
-      <div className="stats-grid">
-
-        {/* TOTAL CONSUMPTION */}
-
-        <Card className="stat-card">
-
-          <div className="stat-icon aqua">
-            <Droplets size={19} />
-          </div>
-
-          <div className="stat-label">
-            Total Consumption
-          </div>
-
-          <div className="stat-value">
-            {total.toFixed(1)}
-
-            <small>
-              {" "}m³
-            </small>
-          </div>
-
-        </Card>
-
-        {/* AVERAGE CONSUMPTION */}
-
-        <Card className="stat-card">
-
-          <div className="stat-icon green">
-            <TrendingUp size={19} />
-          </div>
-
-          <div className="stat-label">
-            Average Consumption
-          </div>
-
-          <div className="stat-value">
-            {average.toFixed(1)}
-
-            <small>
-              {" "}m³
-            </small>
-          </div>
-
-        </Card>
-
-        {/* RECORDS */}
-
-        <Card className="stat-card">
-
-          <div className="stat-icon violet">
-            <Database size={19} />
-          </div>
-
-          <div className="stat-label">
-            Records
-          </div>
-
-          <div className="stat-value">
-            {records.length}
-          </div>
-
-        </Card>
-
-        {/* LATEST CONSUMPTION */}
-
-        <Card className="stat-card">
-
-          <div className="stat-icon rose">
-            <Bell size={19} />
-          </div>
-
-          <div className="stat-label">
-            Latest Consumption
-          </div>
-
-          <div className="stat-value">
-            {Number(
-              consumption
-            ).toFixed(1)}
-
-            <small>
-              {" "}m³
-            </small>
-          </div>
-
-        </Card>
-
-      </div>
-
-      {/* DASHBOARD WELCOME */}
-
-      <Card>
-
-        <div className="card-title">
-          Welcome to the Water Monitoring System
-        </div>
-
-        <p className="muted">
-          Monitor your household water
-          consumption, save actual water
-          bills, and view your consumption
-          forecast.
-        </p>
-
-      </Card>
-
-    </div>
-  );
-}
-
-// WATER-SAVING TIPS
-
+// ============================================================
+// SECTION 4: WATER-SAVING TIPS
+// ============================================================
 function Tips() {
   const tips = [
     {
       title: "Turn Off the Tap",
-      text:
-        "Turn off the tap while brushing your teeth.",
+      text: "Turn off the tap while brushing your teeth.",
       icon: Droplets,
     },
     {
       title: "Fix Water Leaks",
-      text:
-        "Fix leaking faucets and pipes immediately.",
+      text: "Fix leaking faucets and pipes immediately.",
       icon: Settings,
     },
     {
       title: "Use Full Loads",
-      text:
-        "Use washing machines only with full loads.",
+      text: "Use washing machines only with full loads.",
       icon: Database,
     },
     {
       title: "Take Shorter Showers",
-      text:
-        "Take shorter showers to reduce water usage.",
+      text: "Take shorter showers to reduce water usage.",
       icon: Droplets,
     },
     {
       title: "Reuse Water",
-      text:
-        "Reuse suitable water for cleaning or plants.",
+      text: "Reuse suitable water for cleaning or plants.",
       icon: Lightbulb,
     },
   ];
 
   return (
     <Card className="tips-card">
-
-      {/* TIPS HEADER */}
-
       <div className="tips-heading">
-
         <div className="tips-heading-icon">
           <Lightbulb size={21} />
         </div>
 
         <div>
-
-          <div className="card-title">
-            Water-Saving Recommendations
-          </div>
-
+          <div className="card-title">Water-Saving Recommendations</div>
           <p className="muted">
-            Simple ways to reduce household
-            water consumption.
+            Simple ways to reduce household water consumption.
           </p>
-
         </div>
-
       </div>
-
-      {/* TIPS LIST */}
 
       <div className="tips-list">
+        {tips.map((tip, index) => {
+          const Icon = tip.icon;
 
-        {tips.map(
-          (tip, index) => {
-            const Icon = tip.icon;
-
-            return (
-              <div
-                className="tip-row"
-                key={index}
-              >
-
-                <div className="tip-number">
-                  {index + 1}
-                </div>
-
-                <div className="tip-icon">
-                  <Icon size={18} />
-                </div>
-
-                <div className="tip-content">
-
-                  <strong>
-                    {tip.title}
-                  </strong>
-
-                  <p>
-                    {tip.text}
-                  </p>
-
-                </div>
-
+          return (
+            <div className="tip-row" key={tip.title}>
+              <div className="tip-number">{index + 1}</div>
+              <div className="tip-icon">
+                <Icon size={18} />
               </div>
-            );
-          }
-        )}
-
+              <div className="tip-content">
+                <strong>{tip.title}</strong>
+                <p>{tip.text}</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
-
     </Card>
   );
 }
 
-// ADMIN PAGE
-
+// ============================================================
+// SECTION 5: ADMIN PAGES
+// ============================================================
 function AdminPage({ tab }) {
+  const pages = {
+    households: {
+      title: "Households",
+      description: "Manage registered household information.",
+    },
+    data: {
+      title: "Data Management",
+      description: "Manage household water consumption records.",
+    },
+    forecasting: {
+      title: "Forecasting Management",
+      description: "Review water consumption forecasting information.",
+    },
+    reports: {
+      title: "Reports",
+      description: "Generate consumption and forecasting reports.",
+    },
+    users: {
+      title: "Users Management",
+      description: "Manage homeowner and administrator accounts.",
+    },
+    settings: {
+      title: "System Settings",
+      description: "Configure system settings.",
+    },
+  };
 
-  // HOUSEHOLDS
+  const page = pages[tab];
 
-  if (tab === "households") {
+  if (!page) {
     return (
       <Card>
-
-        <div className="card-title">
-          Households
-        </div>
-
-        <p className="muted">
-          Manage registered household
-          information.
-        </p>
-
+        <div className="card-title">Administrator Dashboard</div>
+        <p className="muted">Welcome to the administration portal.</p>
       </Card>
     );
-  }
-
-  // DATA MANAGEMENT
-
-  if (tab === "data") {
-    return (
-      <Card>
-
-        <div className="card-title">
-          Data Management
-        </div>
-
-        <p className="muted">
-          Manage household water
-          consumption records.
-        </p>
-
-      </Card>
-    );
-  }
-
-  // FORECASTING
-
-  if (tab === "forecasting") {
-    return (
-      <Card>
-
-        <div className="card-title">
-          Forecasting Management
-        </div>
-
-        <p className="muted">
-          Review water consumption
-          forecasting information.
-        </p>
-
-      </Card>
-    );
-  }
-
-  // REPORTS
-
-  if (tab === "reports") {
-    return (
-      <Card>
-
-        <div className="card-title">
-          Reports
-        </div>
-
-        <p className="muted">
-          Generate consumption and
-          forecasting reports.
-        </p>
-
-      </Card>
-    );
-  }
-
-  // USERS
-
-  if (tab === "users") {
-    return (
-      <Card>
-
-        <div className="card-title">
-          Users Management
-        </div>
-
-        <p className="muted">
-          Manage homeowner and
-          administrator accounts.
-        </p>
-
-      </Card>
-    );
-  }
-
-  // SYSTEM SETTINGS
-
-  if (tab === "settings") {
-    return (
-      <Card>
-
-        <div className="card-title">
-          System Settings
-        </div>
-
-        <p className="muted">
-          Configure system settings.
-        </p>
-
-      </Card>
-    );
-  }
-
-  return <Dashboard />;
-}
-
-// MAIN APP
-
-function App() {
-  const [role, setRole] = useState(null);
-
-  const [tab, setTab] =
-    useState("dashboard");
-
-  const [mobileOpen, setMobileOpen] =
-    useState(false);
-
-  const [apiOk, setApiOk] =
-    useState(false);
-
-  // CHECK BACKEND CONNECTION
-
-  useEffect(() => {
-    const checkBackend = async () => {
-      try {
-        const response = await fetch(
-          `${API}/api/health`
-        );
-
-        if (!response.ok) {
-          throw new Error();
-        }
-
-        setApiOk(true);
-      } catch {
-        setApiOk(false);
-      }
-    };
-
-    checkBackend();
-  }, []);
-
-  // LOGIN SCREEN
-
-  if (!role) {
-    return (
-      <Landing
-        onLogin={(user) => {
-          setRole(user.role);
-          setTab("dashboard");
-        }}
-      />
-    );
-  }
-
-  // PAGE TITLE
-
-  let title = "Dashboard";
-
-  let subtitle =
-    "Monitor your household water consumption.";
-
-  // HOMEOWNER PAGE TITLES
-
-  if (role === "resident") {
-
-    if (tab === "consumption") {
-      title = "My Consumption";
-
-      subtitle =
-        "Record and manage your actual water bills.";
-    }
-
-    if (tab === "forecast") {
-      title = "Forecast";
-
-      subtitle =
-        "Estimated future water consumption based on your records.";
-    }
-
-    if (tab === "tips") {
-      title = "Water-Saving Tips";
-
-      subtitle =
-        "Recommendations to help reduce water consumption.";
-    }
-  }
-
-  // ADMIN PAGE TITLES
-
-  else {
-
-    if (tab === "households") {
-      title = "Households";
-
-      subtitle =
-        "Manage registered households.";
-    }
-
-    if (tab === "data") {
-      title = "Data Management";
-
-      subtitle =
-        "Manage water consumption records.";
-    }
-
-    if (tab === "forecasting") {
-      title = "Forecasting Management";
-
-      subtitle =
-        "Manage household consumption forecasts.";
-    }
-
-    if (tab === "reports") {
-      title = "Reports";
-
-      subtitle =
-        "Generate system reports.";
-    }
-
-    if (tab === "users") {
-      title = "Users Management";
-
-      subtitle =
-        "Manage system users.";
-    }
-
-    if (tab === "settings") {
-      title = "System Settings";
-
-      subtitle =
-        "Configure system settings.";
-    }
   }
 
   return (
+    <Card>
+      <div className="card-title">{page.title}</div>
+      <p className="muted">{page.description}</p>
+    </Card>
+  );
+}
+
+// ============================================================
+// SECTION 6: MAIN APP
+// ============================================================
+function App() {
+  // CHANGE 1:
+  // Do NOT restore the role from localStorage.
+  // Every full page reload starts with role = null,
+  // which displays the login page.
+  const [role, setRole] = useState(null);
+
+  // CHANGE 2:
+  // Always initialize the tab to Dashboard.
+  // The user must log in before seeing any application page.
+  const [tab, setTab] = useState("dashboard");
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [apiOk, setApiOk] = useState(false);
+
+  // SECTION 6A: Check whether the backend is available.
+  useEffect(() => {
+    let active = true;
+
+    async function checkBackend() {
+      try {
+        const response = await fetch(`${API}/api/health`);
+
+        if (!response.ok) {
+          throw new Error("Health check failed");
+        }
+
+        if (active) {
+          setApiOk(true);
+        }
+      } catch {
+        if (active) {
+          setApiOk(false);
+        }
+      }
+    }
+
+    checkBackend();
+
+    const intervalId = window.setInterval(checkBackend, 15000);
+
+    return () => {
+      active = false;
+      window.clearInterval(intervalId);
+    };
+  }, []);
+
+  // SECTION 6B: Login handler.
+  // Save session information for other app features, but do not
+  // restore the role from storage when the page reloads.
+  function handleLogin(user) {
+    // CHANGE 3: Save the authenticated user's information.
+    localStorage.setItem("waterUser", JSON.stringify(user));
+
+    if (user.token) {
+      localStorage.setItem("waterToken", user.token);
+    } else {
+      localStorage.removeItem("waterToken");
+    }
+
+    if (user.householdId != null) {
+      localStorage.setItem(
+        "waterHouseholdId",
+        String(user.householdId)
+      );
+    } else {
+      localStorage.removeItem("waterHouseholdId");
+    }
+
+    localStorage.setItem("waterActiveTab", "dashboard");
+
+    setTab("dashboard");
+    setMobileOpen(false);
+
+    // This state exists only for the current page session.
+    setRole(user.role);
+  }
+
+  // SECTION 6C: Logout handler.
+  function handleLogout() {
+    localStorage.removeItem("waterUser");
+    localStorage.removeItem("waterToken");
+    localStorage.removeItem("waterHouseholdId");
+    localStorage.removeItem("waterActiveTab");
+
+    setMobileOpen(false);
+    setTab("dashboard");
+    setRole(null);
+  }
+
+  // CHANGE 4:
+  // Show login whenever there is no role in the current React session.
+  // After a refresh, role starts as null, so this page appears.
+  if (!role) {
+    return <Landing onLogin={handleLogin} />;
+  }
+
+  // SECTION 6D: Page titles and descriptions.
+  const pageInfo = {
+    dashboard: {
+      title: "Dashboard",
+      subtitle: "Monitor your household water consumption.",
+    },
+    consumption: {
+      title: "My Consumption",
+      subtitle: "Review your recorded household water consumption.",
+    },
+    forecast: {
+      title: "Forecast",
+      subtitle:
+        "Estimated future water consumption based on your records.",
+    },
+    tips: {
+      title: "Water-Saving Tips",
+      subtitle: "Recommendations to help reduce water consumption.",
+    },
+    households: {
+      title: "Households",
+      subtitle: "Manage registered households.",
+    },
+    data: {
+      title: "Data Management",
+      subtitle: "Manage water consumption records.",
+    },
+    forecasting: {
+      title: "Forecasting Management",
+      subtitle: "Manage household consumption forecasts.",
+    },
+    reports: {
+      title: "Reports",
+      subtitle: "Generate system reports.",
+    },
+    users: {
+      title: "Users Management",
+      subtitle: "Manage system users.",
+    },
+    settings: {
+      title: "System Settings",
+      subtitle: "Configure system settings.",
+    },
+  };
+
+  // SECTION 6E: Restrict navigation according to the user's role.
+  const allowedTabs =
+    role === "admin"
+      ? adminNav.map(([id]) => id)
+      : residentNav.map(([id]) => id);
+
+  const visibleTab = allowedTabs.includes(tab) ? tab : "dashboard";
+  const currentPage = pageInfo[visibleTab] || pageInfo.dashboard;
+
+  // SECTION 6F: Main application layout.
+  return (
     <div className="app-shell">
-
-      {/* SIDEBAR */}
-
       <Sidebar
         role={role}
-        tab={tab}
+        tab={visibleTab}
         setTab={setTab}
-        onLogout={() => {
-          setRole(null);
-          setTab("dashboard");
-          setMobileOpen(false);
-        }}
+        onLogout={handleLogout}
         mobileOpen={mobileOpen}
         setMobileOpen={setMobileOpen}
       />
 
       <div className="main">
-
-        {/* TOPBAR */}
-
         <Topbar
           role={role}
           setMobileOpen={setMobileOpen}
@@ -1388,61 +849,32 @@ function App() {
         />
 
         <main className="content">
-
-          {/* PAGE HEADER */}
-
-          <div className="page-head">
-
-            <h1>
-              {title}
-            </h1>
-
-            <p>
-              {subtitle}
-            </p>
-
-          </div>
-
-          {/* HOMEOWNER DASHBOARD */}
-
-          {role === "resident" &&
-            tab === "dashboard" && (
-              <Dashboard />
-            )}
-
-          {/* HOMEOWNER CONSUMPTION */}
-
-          {role === "resident" &&
-            tab === "consumption" && (
-              <Consumption />
-            )}
-
-          {/* HOMEOWNER FORECAST */}
-
-          {role === "resident" &&
-            tab === "forecast" && (
-              <Forecast />
-            )}
-
-          {/* WATER-SAVING TIPS */}
-
-          {role === "resident" &&
-            tab === "tips" && (
-              <Tips />
-            )}
-
-          {/* ADMIN PAGES */}
-
-          {role === "admin" && (
-            <AdminPage
-              tab={tab}
-            />
+          {/* CHANGE 5:
+              Dashboard and Forecast already have their own page headers. */}
+          {visibleTab !== "dashboard" && visibleTab !== "forecast" && (
+            <div className="page-head">
+              <h1>{currentPage.title}</h1>
+              <p>{currentPage.subtitle}</p>
+            </div>
           )}
 
+          {role === "resident" && visibleTab === "dashboard" && (
+            <Dashboard />
+          )}
+
+          {role === "resident" && visibleTab === "consumption" && (
+            <Consumption />
+          )}
+
+          {role === "resident" && visibleTab === "forecast" && (
+            <Forecast />
+          )}
+
+          {role === "resident" && visibleTab === "tips" && <Tips />}
+
+          {role === "admin" && <AdminPage tab={visibleTab} />}
         </main>
-
       </div>
-
     </div>
   );
 }

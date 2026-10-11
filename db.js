@@ -61,13 +61,13 @@ function household(
     accountType,
     status,
 
-    history: MONTH_SEQUENCE.map(
-      (m, i) => ({
-        monthKey: m.key,
-        month: m.label,
-        consumption: history[i],
-      })
-    ),
+   history: history
+  .map((consumption, i) => ({
+    monthKey: MONTH_SEQUENCE[i].key,
+    month: MONTH_SEQUENCE[i].label,
+    consumption,
+  }))
+  .filter((record) => record.monthKey),
 
     forecast: null,
   };
@@ -76,6 +76,8 @@ function household(
 // SEED DATABASE
 function seedData() {
   return {
+  
+    
     // HOUSEHOLDS
     households: [
       household(
@@ -84,7 +86,7 @@ function seedData() {
         "juan",
         "juan@email.com",
         "Bacao II, General Trias, Cavite",
-        [16, 19, 17, 18, 22, 20]
+        []
       ),
 
       household(
@@ -93,7 +95,7 @@ function seedData() {
         "maria",
         "maria@email.com",
         "Bacao II, General Trias, Cavite",
-        [15, 16, 17, 16, 19, 18]
+        []
       ),
 
       household(
@@ -102,7 +104,7 @@ function seedData() {
         "richard",
         "richard@email.com",
         "Bacao I, General Trias, Cavite",
-        [18, 20, 19, 21, 23, 22]
+        []
       ),
 
       household(
@@ -111,7 +113,7 @@ function seedData() {
         "pedro",
         "pedro@email.com",
         "Bacao I, General Trias, Cavite",
-        [14, 15, 16, 15, 18, 17],
+        [],
         "Inactive"
       ),
 
@@ -121,7 +123,7 @@ function seedData() {
         "ana",
         "ana@email.com",
         "Tejero, General Trias, Cavite",
-        [17, 17, 18, 17, 20, 19]
+        []
       ),
     ],
 

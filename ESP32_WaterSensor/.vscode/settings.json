@@ -1,0 +1,4 @@
+{
+    "platformio-ide.customTerminal": "integrated",
+    "terminal.integrated.scrollback": 10000
+}

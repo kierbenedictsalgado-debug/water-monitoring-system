@@ -1,0 +1,192 @@
+
+.consumption-page {
+  padding: 30px;
+  min-height: 100vh;
+  background: #f4f7fa;
+  color: #203849;
+  font-family: Arial, sans-serif;
+}
+
+.consumption-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.consumption-heading h1 {
+  margin: 7px 0;
+  color: #1e3b4c;
+  font-size: 30px;
+}
+
+.consumption-heading p:not(.consumption-eyebrow) {
+  color: #748493;
+  line-height: 1.6;
+}
+
+.consumption-eyebrow {
+  color: #218c96;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.consumption-refresh {
+  border: none;
+  border-radius: 9px;
+  padding: 11px 18px;
+  background: #218c96;
+  color: white;
+  cursor: pointer;
+}
+
+.consumption-refresh:hover {
+  background: #176b76;
+}
+
+.consumption-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 25px;
+}
+
+.consumption-card,
+.consumption-history {
+  background: white;
+  border: 1px solid #e5ebf0;
+  border-radius: 15px;
+  padding: 23px;
+}
+
+.consumption-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  border-radius: 12px;
+  background: #e8f6f6;
+  font-size: 22px;
+}
+
+.consumption-card p {
+  color: #748493;
+  font-size: 13px;
+}
+
+.consumption-card h2 {
+  color: #1e3b4c;
+  font-size: 27px;
+  overflow-wrap: anywhere;
+}
+
+.consumption-card small {
+  font-size: 14px;
+}
+
+.consumption-history-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.consumption-history-heading h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.consumption-history-heading p {
+  margin: 0;
+  color: #748493;
+  font-size: 13px;
+}
+
+.consumption-history-heading input {
+  width: min(100%, 260px);
+  padding: 11px 13px;
+  border: 1px solid #dce4ea;
+  border-radius: 9px;
+  outline-color: #218c96;
+  font-size: 13px;
+}
+
+.consumption-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.consumption-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.consumption-table th {
+  background: #f4f7fa;
+  color: #536778;
+  font-weight: 600;
+}
+
+.consumption-table th,
+.consumption-table td {
+  padding: 15px 13px;
+  border-bottom: 1px solid #e8edf1;
+  white-space: nowrap;
+}
+
+.consumption-table tbody tr:hover {
+  background: #f8fbfc;
+}
+
+.consumption-message {
+  padding: 35px 12px;
+  text-align: center;
+  color: #748493;
+}
+
+.consumption-message h3 {
+  color: #203849;
+}
+
+.consumption-error {
+  padding: 16px;
+  border-radius: 9px;
+  background: #fff0ef;
+  color: #a93630;
+}
+
+.consumption-footnote {
+  margin-top: 20px;
+  color: #748493;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .consumption-page {
+    padding: 18px;
+  }
+
+  .consumption-heading {
+    align-items: flex-start;
+  }
+
+  .consumption-heading h1 {
+    font-size: 25px;
+  }
+
+  .consumption-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .consumption-history {
+    padding: 16px;
+  }
+}
