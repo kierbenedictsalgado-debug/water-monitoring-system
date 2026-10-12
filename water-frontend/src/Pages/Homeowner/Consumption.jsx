@@ -1,11 +1,10 @@
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL || "http://localhost:4000"
 ).replace(/\/+$/, "");
 
-const CONSUMPTION_ENDPOINT = "/api/sensor/records";
+const CONSUMPTION_ENDPOINT = "/api/sensor/readings";
 
 function getRecords(data) {
   if (Array.isArray(data)) return data;
@@ -24,27 +23,30 @@ function getAmount(record) {
       0
   );
 
-  return Number.isFinite(amount) ? amount : 0;
+  return Number.isFinite(amount) && amount >= 0 ? amount : 0;
+}
+
+function getTimestamp(record) {
+  const value =
+    record?.timestamp ??
+    record?.lastUpdated ??
+    record?.recorded_at ??
+    record?.createdAt ??
+    record?.date ??
+    record?.monthKey;
+
+  if (!value) return 0;
+
+  const timestamp = new Date(value).getTime();
+  return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
 function getDate(record) {
-  const value =
-    record?.lastUpdated ??
-    record?.date ??
-    record?.recorded_at ??
-    record?.createdAt ??
-    record?.timestamp ??
-    record?.monthKey;
+  const timestamp = getTimestamp(record);
 
-  if (!value) return record?.month || "—";
+  if (!timestamp) return record?.month || "—";
 
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return record?.month || String(value);
-  }
-
-  return date.toLocaleDateString("en-PH", {
+  return new Date(timestamp).toLocaleDateString("en-PH", {
     year: "numeric",
     month: "short",
     day: "2-digit",
@@ -52,20 +54,11 @@ function getDate(record) {
 }
 
 function getTime(record) {
-  const value =
-    record?.lastUpdated ??
-    record?.date ??
-    record?.recorded_at ??
-    record?.createdAt ??
-    record?.timestamp;
+  const timestamp = getTimestamp(record);
 
-  if (!value) return "—";
+  if (!timestamp) return "—";
 
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) return "—";
-
-  return date.toLocaleTimeString("en-PH", {
+  return new Date(timestamp).toLocaleTimeString("en-PH", {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -212,27 +205,35 @@ export default function Consumption() {
 
       const response = await fetch(
         `${API_BASE_URL}${CONSUMPTION_ENDPOINT}`,
-        { method: "GET", headers }
+        {
+          method: "GET",
+          headers,
+        }
       );
 
       if (!response.ok) {
         throw new Error(
-          `Unable to load consumption records (HTTP ${response.status}).`
+          `Unable to load sensor readings (HTTP ${response.status}).`
         );
       }
 
       const data = await response.json();
       const fetchedRecords = getRecords(data);
 
+      // Newest readings appear first.
+      fetchedRecords.sort(
+        (a, b) => getTimestamp(b) - getTimestamp(a)
+      );
+
       setRecords(fetchedRecords);
       setLastFetched(new Date());
     } catch (err) {
-      console.error("Failed to load consumption records:", err);
+      console.error("Failed to load sensor readings:", err);
 
       setError(
         err instanceof Error
           ? err.message
-          : "An unexpected error occurred while loading consumption records."
+          : "An unexpected error occurred while loading sensor readings."
       );
     } finally {
       setLoading(false);
@@ -240,39 +241,72 @@ export default function Consumption() {
     }
   }, []);
 
-  // Load records when the page opens and refresh automatically.
+  // Load readings when the page opens and refresh every 5 seconds.
   useEffect(() => {
     loadConsumption(true);
 
-    const intervalId = setInterval(() => {
+    const intervalId = window.setInterval(() => {
       loadConsumption(false);
     }, 5000);
 
-    return () => clearInterval(intervalId);
+    return () => window.clearInterval(intervalId);
   }, [loadConsumption]);
 
-  // This function is used by the Refresh button.
   const handleRefresh = () => {
     loadConsumption(false);
   };
 
   const summary = useMemo(() => {
-    const total = records.reduce(
-      (sum, record) => sum + getAmount(record),
-      0
+    if (!records.length) {
+      return {
+        total: 0,
+        averageIncrease: 0,
+        count: 0,
+      };
+    }
+
+    // The latest reading is the cumulative total.
+    const latestReading = records.reduce((latest, record) =>
+      getTimestamp(record) > getTimestamp(latest)
+        ? record
+        : latest
     );
 
-    const average = records.length > 0 ? total / records.length : 0;
+    const total = getAmount(latestReading);
+
+    // Sort oldest to newest to calculate changes between readings.
+    const chronologicalRecords = [...records].sort(
+      (a, b) => getTimestamp(a) - getTimestamp(b)
+    );
+
+    let totalIncrease = 0;
+    let intervals = 0;
+
+    for (let i = 1; i < chronologicalRecords.length; i++) {
+      const previous = getAmount(chronologicalRecords[i - 1]);
+      const current = getAmount(chronologicalRecords[i]);
+
+      if (current >= previous) {
+        totalIncrease += current - previous;
+        intervals += 1;
+      } else {
+        // A lower cumulative total may mean the device was reset.
+        totalIncrease += current;
+        intervals += 1;
+      }
+    }
 
     return {
       total,
-      average,
+      averageIncrease:
+        intervals > 0 ? totalIncrease / intervals : 0,
       count: records.length,
     };
   }, [records]);
 
   const formatLiters = (value) =>
-    `${value.toLocaleString("en-PH", {
+    `${Number(value).toLocaleString("en-PH", {
+      minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     })} L`;
 
@@ -281,33 +315,41 @@ export default function Consumption() {
       <h1 style={styles.heading}>Water Consumption</h1>
 
       <p style={styles.subtitle}>
-        Monitor your household water consumption and sensor records.
+        Monitor your household water consumption and sensor readings.
       </p>
 
+      {/* Summary cards */}
       <section style={styles.cards}>
         <div style={styles.card}>
-          <div style={styles.cardLabel}>Total Recorded Consumption</div>
+          <div style={styles.cardLabel}>
+            Total Recorded Consumption
+          </div>
           <div style={styles.cardValue}>
             {formatLiters(summary.total)}
           </div>
         </div>
 
         <div style={styles.card}>
-          <div style={styles.cardLabel}>Average Per Record</div>
+          <div style={styles.cardLabel}>
+            Average Increase Per Reading
+          </div>
           <div style={styles.cardValue}>
-            {formatLiters(summary.average)}
+            {formatLiters(summary.averageIncrease)}
           </div>
         </div>
 
         <div style={styles.card}>
-          <div style={styles.cardLabel}>Total Records</div>
+          <div style={styles.cardLabel}>Total Sensor Readings</div>
           <div style={styles.cardValue}>{summary.count}</div>
         </div>
       </section>
 
+      {/* Individual sensor readings */}
       <section style={styles.panel}>
         <div style={styles.panelHeader}>
-          <h2 style={styles.panelTitle}>Consumption Records</h2>
+          <h2 style={styles.panelTitle}>
+            Individual Sensor Readings
+          </h2>
 
           <button
             type="button"
@@ -326,8 +368,8 @@ export default function Consumption() {
           <div role="alert" style={styles.error}>
             {error}
             <div style={{ marginTop: "6px" }}>
-              Check that your backend is running on port 4000 and that
-              the sensor records endpoint is available.
+              Check that your backend is running on port 4000 and
+              that the sensor readings endpoint is available.
             </div>
           </div>
         )}
@@ -347,7 +389,7 @@ export default function Consumption() {
 
         {loading ? (
           <div style={styles.message}>
-            Loading consumption records...
+            Loading sensor readings...
           </div>
         ) : (
           <div style={styles.tableWrapper}>
@@ -356,9 +398,10 @@ export default function Consumption() {
                 <tr>
                   <th style={styles.th}>Date Recorded</th>
                   <th style={styles.th}>Time</th>
-                  <th style={styles.th}>Record ID</th>
-                  <th style={styles.th}>Water Consumption</th>
-                  <th style={styles.th}>Unit</th>
+                  <th style={styles.th}>Device ID</th>
+                  <th style={styles.th}>
+                    Cumulative Consumption (L)
+                  </th>
                 </tr>
               </thead>
 
@@ -366,7 +409,7 @@ export default function Consumption() {
                 {records.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={4}
                       style={{
                         ...styles.td,
                         textAlign: "center",
@@ -374,51 +417,44 @@ export default function Consumption() {
                         padding: "28px 12px",
                       }}
                     >
-                      No consumption records found yet.
+                      No sensor readings found yet.
                     </td>
                   </tr>
                 ) : (
-                  [...records]
-                    .sort((a, b) => {
-                      const dateA = new Date(
-                        a.lastUpdated ?? a.timestamp ?? a.monthKey ?? 0
-                      ).getTime();
+                  records.map((record, index) => (
+                    <tr key={record.id ?? index}>
+                      <td style={styles.td}>{getDate(record)}</td>
 
-                      const dateB = new Date(
-                        b.lastUpdated ?? b.timestamp ?? b.monthKey ?? 0
-                      ).getTime();
+                      <td style={styles.td}>{getTime(record)}</td>
 
-                      return dateB - dateA;
-                    })
-                    .map((record, index) => (
-                      <tr
-                        key={
-                          record.id ??
-                          record.monthKey ??
-                          record.lastUpdated ??
-                          index
-                        }
-                      >
-                        <td style={styles.td}>{getDate(record)}</td>
-                        <td style={styles.td}>{getTime(record)}</td>
-                        <td style={styles.td}>
-                          {record.id ??
-                            record.monthKey ??
-                            `REC-${index + 1}`}
-                        </td>
-                        <td style={styles.td}>
-                          {getAmount(record).toLocaleString("en-PH", {
-                            maximumFractionDigits: 2,
-                          })}
-                        </td>
-                        <td style={styles.td}>L</td>
-                      </tr>
-                    ))
+                      <td style={styles.td}>
+                        {record.deviceId || "—"}
+                      </td>
+
+                      <td style={styles.td}>
+                        {formatLiters(getAmount(record))}
+                      </td>
+                    </tr>
+                  ))
                 )}
               </tbody>
             </table>
           </div>
         )}
+
+        <p
+          style={{
+            color: "#6b7280",
+            fontSize: "12px",
+            lineHeight: 1.6,
+            margin: "16px 0 0",
+          }}
+        >
+          Note: The sensor records cumulative water consumption.
+          Repeated values mean the total has not increased between
+          those readings. The summary uses the latest cumulative
+          reading rather than adding all snapshots together.
+        </p>
       </section>
     </main>
   );

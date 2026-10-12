@@ -786,3 +786,39 @@
     padding: 13px 10px;
   }
 }
+
+/* Forecast accuracy evaluation */
+.accuracy-panel {
+  background: #ffffff;
+  border: 1px solid #d7e5fa;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.accuracy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.accuracy-grid .metric-card {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .accuracy-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .accuracy-panel {
+    padding: 16px;
+  }
+
+  .accuracy-grid {
+    grid-template-columns: 1fr;
+  }
+}

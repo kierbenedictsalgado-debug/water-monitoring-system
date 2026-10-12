@@ -24,6 +24,23 @@ export default function sensorRoutes(db) {
     });
   });
 
+  // Return every individually saved ESP32 reading.
+  router.get("/readings", (req, res) => {
+    const householdId = "HH-ESP32-001";
+
+    const household = db.data.households.find(
+      (item) => item.id === householdId
+    );
+
+    const readings = Array.isArray(household?.readings)
+      ? household.readings
+      : [];
+
+    res.json({
+      records: [...readings].reverse(),
+    });
+  });
+
   // Return daily consumption records.
   router.get("/daily-records", (req, res) => {
     const householdId = "HH-ESP32-001";
@@ -56,7 +73,7 @@ export default function sensorRoutes(db) {
     try {
       const now = new Date();
 
-      // Use a consistent date for daily and monthly records.
+      // Use the server's local date for daily and monthly records.
       const dateKey = [
         now.getFullYear(),
         String(now.getMonth() + 1).padStart(2, "0"),
@@ -87,6 +104,7 @@ export default function sensorRoutes(db) {
           status: "Active",
           history: [],
           dailyHistory: [],
+          readings: [],
           forecast: null,
         };
 
@@ -101,7 +119,20 @@ export default function sensorRoutes(db) {
         household.dailyHistory = [];
       }
 
-      // Preserve the existing monthly record behavior.
+      if (!Array.isArray(household.readings)) {
+        household.readings = [];
+      }
+
+      // Save every incoming ESP32 reading separately.
+      household.readings.push({
+        id: `${now.getTime()}-${household.readings.length}`,
+        deviceId,
+        consumption,
+        date: dateKey,
+        timestamp: now.toISOString(),
+      });
+
+      // Keep one monthly record per month.
       let monthlyRecord = household.history.find(
         (item) => item.monthKey === monthKey
       );
@@ -121,42 +152,48 @@ export default function sensorRoutes(db) {
       }
 
       /*
-       * IMPORTANT:
-       * This daily calculation is valid only when consumption
-       * is a cumulative total for the current month.
-       *
-       * Daily usage = current cumulative total minus the
-       * previous day's final cumulative total.
+       * ESP32 sends a cumulative total.
+       * Calculate daily usage from the previous saved total.
        */
-      const previousMonthlyRecord = household.dailyHistory
-        .filter((item) => item.monthKey === monthKey)
-        .sort((a, b) => b.date.localeCompare(a.date))[0];
-
       const existingDailyRecord = household.dailyHistory.find(
         (item) => item.date === dateKey
       );
 
-      let dailyConsumption = consumption;
+      // Get the most recently saved cumulative total for this month.
+      const previousDailyRecord = household.dailyHistory
+        .filter((item) => item.monthKey === monthKey)
+        .sort((a, b) => b.date.localeCompare(a.date))[0];
+
+      let dailyConsumption;
 
       if (existingDailyRecord) {
-        dailyConsumption = Math.max(
-          0,
-          consumption - (existingDailyRecord.monthToDate || 0)
-        );
+        const previousTotal =
+          Number(existingDailyRecord.monthToDate) || 0;
 
-        // If the monthly total increases during the day,
-        // accumulate the difference into today's usage.
-        existingDailyRecord.consumption += dailyConsumption;
+        // If the ESP32 total decreases, treat it as a reset.
+        dailyConsumption =
+          consumption >= previousTotal
+            ? consumption - previousTotal
+            : consumption;
+
+        existingDailyRecord.consumption =
+          (Number(existingDailyRecord.consumption) || 0) +
+          dailyConsumption;
+
         existingDailyRecord.monthToDate = consumption;
         existingDailyRecord.lastUpdated = now.toISOString();
       } else {
-        const previousMonthToDate =
-          previousMonthlyRecord?.monthToDate ?? 0;
+        const previousTotal =
+          previousDailyRecord &&
+          Number.isFinite(Number(previousDailyRecord.monthToDate))
+            ? Number(previousDailyRecord.monthToDate)
+            : 0;
 
-        dailyConsumption = Math.max(
-          0,
-          consumption - previousMonthToDate
-        );
+        // On a new day, calculate usage since the last saved total.
+        dailyConsumption =
+          consumption >= previousTotal
+            ? consumption - previousTotal
+            : consumption;
 
         household.dailyHistory.push({
           date: dateKey,
@@ -173,6 +210,7 @@ export default function sensorRoutes(db) {
         deviceId,
         householdId,
         consumption,
+        dailyConsumption,
         date: dateKey,
         month,
       });
@@ -182,6 +220,7 @@ export default function sensorRoutes(db) {
         message: "Reading saved",
         householdId,
         consumption,
+        dailyConsumption,
         date: dateKey,
       });
     } catch (error) {
