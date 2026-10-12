@@ -7,11 +7,9 @@ node_modules/
 dist/
 **/dist/
 
-# Python virtual environment
+# Python virtual environment and cache
 lstm-service/.venv/
 **/.venv/
-
-# Python cache files
 __pycache__/
 **/__pycache__/
 *.py[cod]
@@ -24,10 +22,10 @@ ESP32_WaterSensor/.vscode/
 .env
 **/.env
 
-# Local editor settings (optional)
+# Editor settings
 .vscode/
 **/.vscode/
 
-# Generated model files (optional)
+# Generated model files
 *.keras
 *.h5
