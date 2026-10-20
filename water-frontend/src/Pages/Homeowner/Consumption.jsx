@@ -1,461 +1,697 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 
-const API_BASE_URL = (
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000"
-).replace(/\/+$/, "");
+import { useEffect, useMemo, useState } from "react";
+import {
+  Droplets,
+  TrendingUp,
+  Radio,
+  Filter,
+  CalendarDays,
+  Search,
+  Download,
+  RefreshCw,
+  List,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import "./Consumption.css";
 
-const CONSUMPTION_ENDPOINT = "/api/sensor/readings";
+const API = "http://localhost:4000";
+const REFRESH_INTERVAL = 5000;
 
 function getRecords(data) {
   if (Array.isArray(data)) return data;
   if (Array.isArray(data?.records)) return data.records;
   if (Array.isArray(data?.history)) return data.history;
-  if (Array.isArray(data?.data)) return data.data;
   return [];
 }
 
-function getAmount(record) {
-  const amount = Number(
-    record?.consumption ??
-      record?.amount ??
-      record?.usage ??
-      record?.water_consumption ??
-      0
-  );
+function getDateKey(record) {
+  if (record.date) return String(record.date).slice(0, 10);
 
-  return Number.isFinite(amount) && amount >= 0 ? amount : 0;
-}
+  const timestamp = record.timestamp || record.lastUpdated;
 
-function getTimestamp(record) {
-  const value =
-    record?.timestamp ??
-    record?.lastUpdated ??
-    record?.recorded_at ??
-    record?.createdAt ??
-    record?.date ??
-    record?.monthKey;
+  if (timestamp) {
+    const date = new Date(timestamp);
 
-  if (!value) return 0;
+    if (!Number.isNaN(date.getTime())) {
+      return [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, "0"),
+        String(date.getDate()).padStart(2, "0"),
+      ].join("-");
+    }
+  }
 
-  const timestamp = new Date(value).getTime();
-  return Number.isFinite(timestamp) ? timestamp : 0;
-}
-
-function getDate(record) {
-  const timestamp = getTimestamp(record);
-
-  if (!timestamp) return record?.month || "—";
-
-  return new Date(timestamp).toLocaleDateString("en-PH", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  });
+  return "";
 }
 
 function getTime(record) {
-  const timestamp = getTimestamp(record);
+  const timestamp = record.timestamp || record.lastUpdated;
 
-  if (!timestamp) return "—";
+  if (!timestamp) return "Time unavailable";
 
-  return new Date(timestamp).toLocaleTimeString("en-PH", {
+  const date = new Date(timestamp);
+
+  if (Number.isNaN(date.getTime())) return "Time unavailable";
+
+  return date.toLocaleTimeString("en-PH", {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
+    hour12: true,
   });
 }
 
-const styles = {
-  page: {
-    padding: "24px",
-    color: "#1f2937",
-    fontFamily: "Arial, sans-serif",
-    width: "100%",
-    boxSizing: "border-box",
-  },
-  heading: {
-    fontSize: "28px",
-    fontWeight: 700,
-    margin: "0 0 8px",
-  },
-  subtitle: {
-    color: "#6b7280",
-    margin: "0 0 24px",
-    fontSize: "14px",
-  },
-  cards: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-    gap: "16px",
-    marginBottom: "24px",
-  },
-  card: {
-    background: "#ffffff",
-    border: "1px solid #e5e7eb",
-    borderRadius: "12px",
-    padding: "20px",
-    boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
-  },
-  cardLabel: {
-    fontSize: "14px",
-    color: "#6b7280",
-    marginBottom: "12px",
-  },
-  cardValue: {
-    fontSize: "26px",
-    fontWeight: 700,
-    overflowWrap: "anywhere",
-  },
-  panel: {
-    background: "#ffffff",
-    border: "1px solid #e5e7eb",
-    borderRadius: "12px",
-    padding: "20px",
-    overflow: "hidden",
-  },
-  panelHeader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "12px",
-    flexWrap: "wrap",
-    marginBottom: "16px",
-  },
-  panelTitle: {
-    fontSize: "18px",
-    fontWeight: 700,
-    margin: 0,
-  },
-  button: {
-    background: "#2563eb",
-    color: "#ffffff",
-    border: "none",
-    borderRadius: "8px",
-    padding: "10px 16px",
-    cursor: "pointer",
-    fontSize: "14px",
-    fontWeight: 600,
-  },
-  tableWrapper: {
-    width: "100%",
-    overflowX: "auto",
-  },
-  table: {
-    width: "100%",
-    minWidth: "600px",
-    borderCollapse: "collapse",
-    textAlign: "left",
-  },
-  th: {
-    padding: "13px 12px",
-    background: "#f9fafb",
-    borderBottom: "1px solid #e5e7eb",
-    color: "#4b5563",
-    fontSize: "13px",
-    whiteSpace: "nowrap",
-  },
-  td: {
-    padding: "14px 12px",
-    borderBottom: "1px solid #e5e7eb",
-    fontSize: "14px",
-  },
-  message: {
-    padding: "16px",
-    borderRadius: "8px",
-    background: "#f9fafb",
-    color: "#6b7280",
-    marginBottom: "16px",
-  },
-  error: {
-    padding: "12px 16px",
-    borderRadius: "8px",
-    background: "#fef2f2",
-    color: "#b91c1c",
-    marginBottom: "16px",
-    fontSize: "14px",
-  },
-};
+function normalizeReading(record, index) {
+  return {
+    id: record.id ?? `${getDateKey(record)}-${index}`,
+    date: getDateKey(record),
+    time: record.time || getTime(record),
+    deviceId: record.deviceId || "Unknown device",
+    consumption: Number(record.consumption) || 0,
+    status: "Recorded",
+    timestamp: record.timestamp || record.lastUpdated || "",
+  };
+}
 
-export default function Consumption() {
+function formatDate(value) {
+  if (!value) return "Unknown date";
+
+  const [year, month, day] = value.split("-").map(Number);
+
+  if (!year || !month || !day) return "Unknown date";
+
+  return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function formatNumber(value) {
+  return Number(value || 0).toLocaleString("en-PH", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+function Consumption() {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
-  const [lastFetched, setLastFetched] = useState(null);
 
-  const loadConsumption = useCallback(async (showLoading = false) => {
-    if (showLoading) {
-      setLoading(true);
-    } else {
-      setRefreshing(true);
-    }
+  const [period, setPeriod] = useState("all");
+  const [device, setDevice] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
+  const [search, setSearch] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
+  async function refreshRecords() {
     try {
-      setError("");
-
-      const token = localStorage.getItem("waterToken");
-
-      const headers = {
-        Accept: "application/json",
-      };
-
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
-      }
-
-      const response = await fetch(
-        `${API_BASE_URL}${CONSUMPTION_ENDPOINT}`,
-        {
-          method: "GET",
-          headers,
-        }
-      );
+      const response = await fetch(`${API}/api/sensor/readings`);
 
       if (!response.ok) {
-        throw new Error(
-          `Unable to load sensor readings (HTTP ${response.status}).`
-        );
+        throw new Error("Unable to load sensor readings.");
       }
 
       const data = await response.json();
-      const fetchedRecords = getRecords(data);
+      const normalized = getRecords(data).map(normalizeReading);
 
-      // Newest readings appear first.
-      fetchedRecords.sort(
-        (a, b) => getTimestamp(b) - getTimestamp(a)
-      );
-
-      setRecords(fetchedRecords);
-      setLastFetched(new Date());
+      setRecords(normalized);
+      setError("");
     } catch (err) {
-      console.error("Failed to load sensor readings:", err);
+      console.error("Failed to fetch consumption records:", err);
 
       setError(
-        err instanceof Error
-          ? err.message
-          : "An unexpected error occurred while loading sensor readings."
+        "Unable to load sensor readings. Check that your backend server is running."
       );
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
+  }
+
+  useEffect(() => {
+    refreshRecords();
+
+    const interval = setInterval(refreshRecords, REFRESH_INTERVAL);
+
+    return () => clearInterval(interval);
   }, []);
 
-  // Load readings when the page opens and refresh every 5 seconds.
-  useEffect(() => {
-    loadConsumption(true);
+  const devices = useMemo(() => {
+    return [...new Set(records.map((record) => record.deviceId))].sort();
+  }, [records]);
 
-    const intervalId = window.setInterval(() => {
-      loadConsumption(false);
-    }, 5000);
+  const filteredRecords = useMemo(() => {
+    let rows = [...records];
 
-    return () => window.clearInterval(intervalId);
-  }, [loadConsumption]);
+    const now = new Date();
+    const today = [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, "0"),
+      String(now.getDate()).padStart(2, "0"),
+    ].join("-");
 
-  const handleRefresh = () => {
-    loadConsumption(false);
-  };
-
-  const summary = useMemo(() => {
-    if (!records.length) {
-      return {
-        total: 0,
-        averageIncrease: 0,
-        count: 0,
-      };
+    if (period === "today") {
+      rows = rows.filter((record) => record.date === today);
     }
 
-    // The latest reading is the cumulative total.
-    const latestReading = records.reduce((latest, record) =>
-      getTimestamp(record) > getTimestamp(latest)
-        ? record
-        : latest
-    );
+    if (period === "week") {
+      const start = new Date(now);
+      start.setDate(start.getDate() - 6);
+      start.setHours(0, 0, 0, 0);
 
-    const total = getAmount(latestReading);
+      const startKey = [
+        start.getFullYear(),
+        String(start.getMonth() + 1).padStart(2, "0"),
+        String(start.getDate()).padStart(2, "0"),
+      ].join("-");
 
-    // Sort oldest to newest to calculate changes between readings.
-    const chronologicalRecords = [...records].sort(
-      (a, b) => getTimestamp(a) - getTimestamp(b)
-    );
+      rows = rows.filter(
+        (record) =>
+          record.date &&
+          record.date >= startKey &&
+          record.date <= today
+      );
+    }
 
-    let totalIncrease = 0;
-    let intervals = 0;
+    if (period === "month") {
+      const currentMonth = today.slice(0, 7);
 
-    for (let i = 1; i < chronologicalRecords.length; i++) {
-      const previous = getAmount(chronologicalRecords[i - 1]);
-      const current = getAmount(chronologicalRecords[i]);
+      rows = rows.filter(
+        (record) =>
+          record.date &&
+          record.date.slice(0, 7) === currentMonth
+      );
+    }
 
-      if (current >= previous) {
-        totalIncrease += current - previous;
-        intervals += 1;
-      } else {
-        // A lower cumulative total may mean the device was reset.
-        totalIncrease += current;
-        intervals += 1;
+    if (period === "custom") {
+      if (startDate) {
+        rows = rows.filter(
+          (record) => record.date && record.date >= startDate
+        );
+      }
+
+      if (endDate) {
+        rows = rows.filter(
+          (record) => record.date && record.date <= endDate
+        );
       }
     }
 
-    return {
-      total,
-      averageIncrease:
-        intervals > 0 ? totalIncrease / intervals : 0,
-      count: records.length,
-    };
+    if (device !== "all") {
+      rows = rows.filter((record) => record.deviceId === device);
+    }
+
+    if (search.trim()) {
+      const query = search.trim().toLowerCase();
+
+      rows = rows.filter(
+        (record) =>
+          record.deviceId.toLowerCase().includes(query) ||
+          record.date.toLowerCase().includes(query) ||
+          formatDate(record.date).toLowerCase().includes(query) ||
+          record.time.toLowerCase().includes(query)
+      );
+    }
+
+    if (sortBy === "oldest") {
+      rows.sort(
+        (a, b) =>
+          a.date.localeCompare(b.date) ||
+          a.time.localeCompare(b.time)
+      );
+    } else if (sortBy === "highest") {
+      rows.sort((a, b) => b.consumption - a.consumption);
+    } else if (sortBy === "lowest") {
+      rows.sort((a, b) => a.consumption - b.consumption);
+    } else {
+      rows.sort((a, b) => {
+        const dateCompare = b.date.localeCompare(a.date);
+
+        if (dateCompare !== 0) return dateCompare;
+
+        return b.time.localeCompare(a.time);
+      });
+    }
+
+    return rows;
+  }, [
+    records,
+    period,
+    device,
+    sortBy,
+    search,
+    startDate,
+    endDate,
+  ]);
+
+  const pageCount = Math.max(
+    1,
+    Math.ceil(filteredRecords.length / pageSize)
+  );
+
+  const safePage = Math.min(page, pageCount);
+
+  const visibleRecords = filteredRecords.slice(
+    (safePage - 1) * pageSize,
+    safePage * pageSize
+  );
+
+  const latestByDevice = useMemo(() => {
+    const latest = new Map();
+
+    for (const record of records) {
+      const previous = latest.get(record.deviceId);
+
+      if (
+        !previous ||
+        `${record.date} ${record.time}` >
+          `${previous.date} ${previous.time}`
+      ) {
+        latest.set(record.deviceId, record);
+      }
+    }
+
+    return [...latest.values()];
   }, [records]);
 
-  const formatLiters = (value) =>
-    `${Number(value).toLocaleString("en-PH", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })} L`;
+  const totalConsumption = useMemo(() => {
+    // Sensor readings are cumulative totals.
+    // Do not add every cumulative reading together.
+    return latestByDevice.reduce(
+      (sum, record) => sum + record.consumption,
+      0
+    );
+  }, [latestByDevice]);
+
+  const averageIncrease = useMemo(() => {
+    // Average value per recorded reading.
+    if (!records.length) return 0;
+
+    return (
+      records.reduce((sum, record) => sum + record.consumption, 0) /
+      records.length
+    );
+  }, [records]);
+
+  const clearFilters = () => {
+    setPeriod("all");
+    setDevice("all");
+    setSortBy("newest");
+    setSearch("");
+    setStartDate("");
+    setEndDate("");
+    setPage(1);
+  };
+
+  const exportCSV = () => {
+    const headers = [
+      "Date",
+      "Time",
+      "Device ID",
+      "Cumulative Consumption (L)",
+      "Status",
+    ];
+
+    const rows = filteredRecords.map((record) => [
+      record.date,
+      record.time,
+      record.deviceId,
+      record.consumption,
+      record.status,
+    ]);
+
+    const csv = [headers, ...rows]
+      .map((row) =>
+        row
+          .map((value) => `"${String(value).replace(/"/g, '""')}"`)
+          .join(",")
+      )
+      .join("\n");
+
+    const blob = new Blob(["\uFEFF" + csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "water-consumption-records.csv";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
 
   return (
-    <main style={styles.page}>
-      <h1 style={styles.heading}>Water Consumption</h1>
+    <main className="consumption-page">
+      {/* Duplicate My Consumption hero removed.
+          The shared page heading is already displayed by App.jsx. */}
 
-      <p style={styles.subtitle}>
-        Monitor your household water consumption and sensor readings.
-      </p>
-
-      {/* Summary cards */}
-      <section style={styles.cards}>
-        <div style={styles.card}>
-          <div style={styles.cardLabel}>
-            Total Recorded Consumption
-          </div>
-          <div style={styles.cardValue}>
-            {formatLiters(summary.total)}
-          </div>
+      {error && (
+        <div className="consumption-error" role="alert">
+          <span>{error}</span>
+          <button
+            type="button"
+            className="button button-outline"
+            onClick={refreshRecords}
+          >
+            <RefreshCw size={15} />
+            Retry
+          </button>
         </div>
+      )}
 
-        <div style={styles.card}>
-          <div style={styles.cardLabel}>
-            Average Increase Per Reading
-          </div>
-          <div style={styles.cardValue}>
-            {formatLiters(summary.averageIncrease)}
-          </div>
-        </div>
+      <section className="consumption-stats">
+        <article className="consumption-stat">
+          <span className="stat-icon blue">
+            <Droplets />
+          </span>
 
-        <div style={styles.card}>
-          <div style={styles.cardLabel}>Total Sensor Readings</div>
-          <div style={styles.cardValue}>{summary.count}</div>
-        </div>
+          <div className="stat-label">Latest Cumulative Total</div>
+          <strong>
+            {loading ? "Loading..." : `${formatNumber(totalConsumption)} L`}
+          </strong>
+          <small>Latest reading per device</small>
+        </article>
+
+        <article className="consumption-stat">
+          <span className="stat-icon purple">
+            <TrendingUp />
+          </span>
+
+          <div className="stat-label">Average Reading</div>
+          <strong>
+            {loading ? "Loading..." : `${formatNumber(averageIncrease)} L`}
+          </strong>
+          <small>Average value per recorded reading</small>
+        </article>
+
+        <article className="consumption-stat">
+          <span className="stat-icon green">
+            <Radio />
+          </span>
+
+          <div className="stat-label">Total Readings</div>
+          <strong>
+            {loading ? "Loading..." : records.length.toLocaleString()}
+          </strong>
+          <small>Individual records from the backend</small>
+        </article>
       </section>
 
-      {/* Individual sensor readings */}
-      <section style={styles.panel}>
-        <div style={styles.panelHeader}>
-          <h2 style={styles.panelTitle}>
-            Individual Sensor Readings
-          </h2>
+      <section className="consumption-panel">
+        <div className="panel-heading">
+          <span className="panel-icon">
+            <Filter />
+          </span>
+
+          <div>
+            <h2>Filter Records</h2>
+            <p>
+              Find and view your consumption data using your preferred
+              criteria.
+            </p>
+          </div>
+        </div>
+
+        <div className="filter-grid">
+          <div className="filter-field">
+            <label htmlFor="period">
+              <CalendarDays size={15} />
+              Time Period
+            </label>
+
+            <select
+              id="period"
+              value={period}
+              onChange={(event) => {
+                setPeriod(event.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="all">All records</option>
+              <option value="today">Today</option>
+              <option value="week">Last 7 days</option>
+              <option value="month">This month</option>
+              <option value="custom">Custom date range</option>
+            </select>
+
+            {period === "custom" && (
+              <div className="date-range">
+                <input
+                  aria-label="Start date"
+                  type="date"
+                  value={startDate}
+                  max={endDate || undefined}
+                  onChange={(event) => {
+                    setStartDate(event.target.value);
+                    setPage(1);
+                  }}
+                />
+
+                <span>to</span>
+
+                <input
+                  aria-label="End date"
+                  type="date"
+                  value={endDate}
+                  min={startDate || undefined}
+                  onChange={(event) => {
+                    setEndDate(event.target.value);
+                    setPage(1);
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="filter-field">
+            <label htmlFor="device">
+              <Radio size={15} />
+              Device
+            </label>
+
+            <select
+              id="device"
+              value={device}
+              onChange={(event) => {
+                setDevice(event.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="all">All devices</option>
+              {devices.map((deviceId) => (
+                <option key={deviceId} value={deviceId}>
+                  {deviceId}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-field">
+            <label htmlFor="sort">
+              <TrendingUp size={15} />
+              Sort By
+            </label>
+
+            <select
+              id="sort"
+              value={sortBy}
+              onChange={(event) => {
+                setSortBy(event.target.value);
+                setPage(1);
+              }}
+            >
+              <option value="newest">Newest first</option>
+              <option value="oldest">Oldest first</option>
+              <option value="highest">Highest consumption</option>
+              <option value="lowest">Lowest consumption</option>
+            </select>
+
+            <label htmlFor="search" className="search-label">
+              <Search size={15} />
+              Search
+            </label>
+
+            <input
+              id="search"
+              type="search"
+              value={search}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setPage(1);
+              }}
+              placeholder="Search device ID or date..."
+            />
+          </div>
+        </div>
+
+        <div className="filter-actions">
+          <button
+            type="button"
+            className="button button-outline"
+            onClick={clearFilters}
+          >
+            Clear Filters
+          </button>
 
           <button
             type="button"
-            onClick={handleRefresh}
-            disabled={refreshing || loading}
-            style={{
-              ...styles.button,
-              opacity: refreshing || loading ? 0.65 : 1,
-            }}
+            className="button button-primary"
+            onClick={() => setPage(1)}
           >
-            {refreshing ? "Refreshing..." : "Refresh"}
+            Apply Filters
+          </button>
+        </div>
+      </section>
+
+      <section className="consumption-panel readings-panel">
+        <div className="readings-heading">
+          <span className="panel-icon">
+            <List />
+          </span>
+
+          <div className="readings-title">
+            <h2>Individual Sensor Readings</h2>
+            <p>Latest records received from your ESP32 device.</p>
+          </div>
+
+          <span className="record-count">
+            {filteredRecords.length} filtered
+          </span>
+
+          <button
+            type="button"
+            className="button button-outline export-button"
+            onClick={exportCSV}
+            disabled={!filteredRecords.length}
+          >
+            <Download size={15} />
+            Export CSV
+          </button>
+
+          <button
+            type="button"
+            className="button button-primary refresh-button"
+            onClick={refreshRecords}
+            disabled={loading}
+          >
+            <RefreshCw size={15} />
+            {loading ? "Loading..." : "Refresh"}
           </button>
         </div>
 
-        {error && (
-          <div role="alert" style={styles.error}>
-            {error}
-            <div style={{ marginTop: "6px" }}>
-              Check that your backend is running on port 4000 and
-              that the sensor readings endpoint is available.
-            </div>
-          </div>
-        )}
+        <div className="updated-line">
+          {loading
+            ? "Loading backend records..."
+            : `Auto-refreshes every ${REFRESH_INTERVAL / 1000} seconds`}
+        </div>
 
-        {lastFetched && (
-          <p
-            style={{
-              color: "#6b7280",
-              fontSize: "12px",
-              margin: "0 0 16px",
-            }}
-          >
-            Last updated: {lastFetched.toLocaleTimeString("en-PH")}
-            {" · "}Automatic refresh every 5 seconds
-          </p>
-        )}
+        <div className="table-wrap">
+          <table className="consumption-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Date Recorded</th>
+                <th>Time</th>
+                <th>Device ID</th>
+                <th>Cumulative Consumption (L)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
 
-        {loading ? (
-          <div style={styles.message}>
-            Loading sensor readings...
-          </div>
-        ) : (
-          <div style={styles.tableWrapper}>
-            <table style={styles.table}>
-              <thead>
+            <tbody>
+              {loading && !records.length ? (
                 <tr>
-                  <th style={styles.th}>Date Recorded</th>
-                  <th style={styles.th}>Time</th>
-                  <th style={styles.th}>Device ID</th>
-                  <th style={styles.th}>
-                    Cumulative Consumption (L)
-                  </th>
+                  <td colSpan="6" className="empty-state">
+                    Loading sensor readings...
+                  </td>
                 </tr>
-              </thead>
-
-              <tbody>
-                {records.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={4}
-                      style={{
-                        ...styles.td,
-                        textAlign: "center",
-                        color: "#6b7280",
-                        padding: "28px 12px",
-                      }}
-                    >
-                      No sensor readings found yet.
+              ) : visibleRecords.length > 0 ? (
+                visibleRecords.map((record, index) => (
+                  <tr key={record.id}>
+                    <td>{(safePage - 1) * pageSize + index + 1}</td>
+                    <td>{formatDate(record.date)}</td>
+                    <td>{record.time}</td>
+                    <td>{record.deviceId}</td>
+                    <td>{formatNumber(record.consumption)} L</td>
+                    <td>
+                      <span className="online-status">
+                        <i />
+                        {record.status}
+                      </span>
                     </td>
                   </tr>
-                ) : (
-                  records.map((record, index) => (
-                    <tr key={record.id ?? index}>
-                      <td style={styles.td}>{getDate(record)}</td>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="empty-state">
+                    No records match your filters. Try changing your
+                    search or date range.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-                      <td style={styles.td}>{getTime(record)}</td>
+        <div className="table-footer">
+          <span>
+            Showing{" "}
+            {filteredRecords.length ? (safePage - 1) * pageSize + 1 : 0}
+            {"–"}
+            {Math.min(safePage * pageSize, filteredRecords.length)} of{" "}
+            {filteredRecords.length} filtered records
+          </span>
 
-                      <td style={styles.td}>
-                        {record.deviceId || "—"}
-                      </td>
+          <div className="pagination">
+            <label htmlFor="page-size">Rows per page</label>
 
-                      <td style={styles.td}>
-                        {formatLiters(getAmount(record))}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+            <select
+              id="page-size"
+              value={pageSize}
+              onChange={(event) => {
+                setPageSize(Number(event.target.value));
+                setPage(1);
+              }}
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+            </select>
+
+            <button
+              type="button"
+              aria-label="Previous page"
+              disabled={safePage <= 1}
+              onClick={() => setPage((current) => Math.max(1, current - 1))}
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            <span className="current-page">{safePage}</span>
+
+            <button
+              type="button"
+              aria-label="Next page"
+              disabled={safePage >= pageCount}
+              onClick={() =>
+                setPage((current) => Math.min(pageCount, current + 1))
+              }
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
-        )}
-
-        <p
-          style={{
-            color: "#6b7280",
-            fontSize: "12px",
-            lineHeight: 1.6,
-            margin: "16px 0 0",
-          }}
-        >
-          Note: The sensor records cumulative water consumption.
-          Repeated values mean the total has not increased between
-          those readings. The summary uses the latest cumulative
-          reading rather than adding all snapshots together.
-        </p>
+        </div>
       </section>
     </main>
   );
 }
+
+export default Consumption;

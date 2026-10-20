@@ -1,95 +1,146 @@
 
+from datetime import date
+from typing import Optional
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from forecast import get_daily_records
+from forecast import (
+    evaluate_forecast,
+    get_daily_records,
+    moving_average_forecast,
+)
 
-app = FastAPI(title="Water Consumption Forecasting API")
+app = FastAPI(
+    title="Water Consumption Forecasting API",
+    description="Baseline water consumption forecasting and evaluation.",
+    version="1.0.0",
+)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
+class HistoryRecord(BaseModel):
+    date: str
+    consumption: float = Field(ge=0)
+
+
 class ForecastRequest(BaseModel):
-    days: int = Field(default=7, ge=1, le=30)
+    days: int = Field(default=7, ge=1, le=90)
+    history: Optional[list[HistoryRecord]] = None
+
+
+def get_history(request_history):
+    if request_history is not None:
+        records = [
+            record.model_dump()
+            for record in request_history
+        ]
+    else:
+        records = get_daily_records()
+
+    records.sort(key=lambda item: item["date"])
+    return records
 
 
 @app.get("/")
-def home():
+def root():
     return {
-        "status": "running",
-        "service": "Water Consumption Forecasting API"
+        "status": "ok",
+        "message": "Water Consumption Forecasting API is running.",
+        "endpoints": ["/forecast", "/evaluate", "/health"],
     }
 
 
 @app.get("/health")
 def health():
-    return {"status": "healthy"}
+    return {"status": "ok"}
 
 
 @app.get("/daily-records")
 def daily_records():
-    records = get_daily_records()
-
-    return {
-        "count": len(records),
-        "records": records
-    }
+    return {"records": get_daily_records()}
 
 
 @app.post("/forecast")
-def create_forecast(request: ForecastRequest):
-    records = get_daily_records()
+def forecast(request: ForecastRequest):
+    try:
+        history = get_history(request.history)
 
-    if not records:
-        raise HTTPException(
-            status_code=400,
-            detail="No consumption records are available for forecasting."
+        if not history:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "No historical consumption records were provided "
+                    "or retrieved from the Node.js backend."
+                ),
+            )
+
+        predictions = moving_average_forecast(
+            history,
+            days=request.days,
         )
 
-    try:
-        values = [
-            float(record["consumption"])
-            for record in records
-            if record.get("consumption") is not None
-        ]
-    except (TypeError, ValueError, KeyError):
+        return {
+            "method": "moving_average_baseline",
+            "days": request.days,
+            "history_records": len(history),
+            "forecast": [
+                {
+                    "day": index + 1,
+                    "consumption": value,
+                }
+                for index, value in enumerate(predictions)
+            ],
+            "predictions": predictions,
+        }
+
+    except HTTPException:
+        raise
+    except Exception as error:
         raise HTTPException(
             status_code=500,
-            detail="Consumption records contain invalid values."
-        )
+            detail=f"Forecast calculation failed: {error}",
+        ) from error
 
-    if not values:
+
+@app.post("/evaluate")
+def evaluate(request: ForecastRequest):
+    try:
+        history = get_history(request.history)
+
+        if len(history) < 3:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "At least 3 daily historical records are required "
+                    "to evaluate the forecast."
+                ),
+            )
+
+        return evaluate_forecast(history)
+
+    except HTTPException:
+        raise
+    except ValueError as error:
         raise HTTPException(
             status_code=400,
-            detail="No valid consumption values are available."
-        )
-
-    # Baseline forecast: average of the latest seven available values.
-    recent_values = values[-7:]
-    average = sum(recent_values) / len(recent_values)
-
-    forecasts = []
-
-    for day in range(1, request.days + 1):
-        forecasts.append({
-            "day": day,
-            "consumption": round(average, 3)
-        })
-
-    return {
-        "method": "moving_average_baseline",
-        "forecast_days": request.days,
-        "historical_records_used": len(recent_values),
-        "average_consumption": round(average, 3),
-        "forecasts": forecasts,
-        "message": (
-            "Baseline estimates only. A trained LSTM model "
-            "is not being used by this endpoint."
-        )
-    }
+            detail=str(error),
+        ) from error
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Evaluation failed: {error}",
+        ) from error

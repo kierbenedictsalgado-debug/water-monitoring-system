@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 import {
@@ -22,8 +23,10 @@ import "./App.css";
 import Consumption from "./Pages/Homeowner/Consumption";
 import Forecast from "./Pages/Homeowner/Forecasting";
 import Dashboard from "./Pages/Homeowner/Dashboard";
+import Recommendation from "./Pages/Homeowner/Recommendation";
 
 const API = "http://localhost:4000";
+const SESSION_KEY = "waterSessionUser";
 
 const residentNav = [
   ["dashboard", "Dashboard", Home],
@@ -36,19 +39,41 @@ const adminNav = [
   ["dashboard", "Dashboard", Home],
   ["households", "Households", Users],
   ["data", "Data Management", Database],
-  ["forecasting", "Forecasting", TrendingUp],
+  ["forecasting", "Forecasting Management", TrendingUp],
   ["reports", "Reports", FileText],
   ["users", "Users", Users],
   ["settings", "System Settings", Settings],
 ];
 
-function Card({ children, className = "" }) {
-  return <div className={`card ${className}`}>{children}</div>;
+// ============================================================
+// SESSION HELPERS
+// ============================================================
+
+function getSessionUser() {
+  try {
+    const savedUser = sessionStorage.getItem(SESSION_KEY);
+
+    if (!savedUser) return null;
+
+    const user = JSON.parse(savedUser);
+
+    if (!user || !["admin", "resident"].includes(user.role)) {
+      sessionStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+
+    return user;
+  } catch (error) {
+    console.error("Unable to restore session:", error);
+    sessionStorage.removeItem(SESSION_KEY);
+    return null;
+  }
 }
 
 // ============================================================
-// SECTION 1: LOGIN AND SIGNUP
+// LOGIN AND SIGNUP
 // ============================================================
+
 function Landing({ onLogin }) {
   const [mode, setMode] = useState("login");
   const [username, setUsername] = useState("");
@@ -60,11 +85,6 @@ function Landing({ onLogin }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  function clearMessages() {
-    setError("");
-    setSuccess("");
-  }
-
   function switchMode(newMode) {
     setMode(newMode);
     setUsername("");
@@ -72,13 +92,14 @@ function Landing({ onLogin }) {
     setConfirmPassword("");
     setShowPassword(false);
     setShowConfirmPassword(false);
-    clearMessages();
+    setError("");
+    setSuccess("");
   }
 
-  // LOGIN: Authenticate against the backend.
   async function handleLogin(e) {
     e.preventDefault();
-    clearMessages();
+    setError("");
+    setSuccess("");
 
     const cleanUsername = username.trim();
 
@@ -99,51 +120,37 @@ function Landing({ onLogin }) {
         }),
       });
 
-      let data = {};
-
-      try {
-        data = await response.json();
-      } catch {
-        data = {};
-      }
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         setError(
-          response.status === 401 || response.status === 403
-            ? "Incorrect username or password."
-            : data.message ||
-                data.error ||
-                "Unable to log in. Please try again."
+          data.message || data.error || "Invalid username or password."
         );
         return;
       }
 
       if (!data.user || !["admin", "resident"].includes(data.user.role)) {
-        setError("The server did not return valid user information.");
+        setError("The server returned invalid user information.");
         return;
       }
 
       onLogin({
         ...data.user,
         token: data.token ?? data.user.token ?? null,
-        householdId:
-          data.householdId ?? data.user.householdId ?? null,
+        householdId: data.householdId ?? data.user.householdId ?? null,
       });
     } catch (err) {
-      console.error("Login request failed:", err);
-
-      setError(
-        "Cannot connect to the server. Make sure the backend is running."
-      );
+      console.error("Login error:", err);
+      setError("Cannot connect to the server. Make sure the backend is running.");
     } finally {
       setLoading(false);
     }
   }
 
-  // SIGNUP: Register a new resident account.
   async function handleSignup(e) {
     e.preventDefault();
-    clearMessages();
+    setError("");
+    setSuccess("");
 
     const cleanUsername = username.trim();
 
@@ -175,21 +182,11 @@ function Landing({ onLogin }) {
         }),
       });
 
-      let data = {};
-
-      try {
-        data = await response.json();
-      } catch {
-        data = {};
-      }
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         setError(
-          data.message ||
-            data.error ||
-            (response.status === 409
-              ? "Username already exists."
-              : "Unable to create account.")
+          data.message || data.error || "Unable to create your account."
         );
         return;
       }
@@ -200,13 +197,10 @@ function Landing({ onLogin }) {
       setConfirmPassword("");
       setShowPassword(false);
       setShowConfirmPassword(false);
-      setSuccess("Account created successfully! Please sign in.");
+      setSuccess("Account created successfully. Please sign in.");
     } catch (err) {
-      console.error("Registration request failed:", err);
-
-      setError(
-        "Cannot connect to the server. Make sure the backend is running."
-      );
+      console.error("Registration error:", err);
+      setError("Cannot connect to the server. Make sure the backend is running.");
     } finally {
       setLoading(false);
     }
@@ -239,10 +233,10 @@ function Landing({ onLogin }) {
               <input
                 id="login-username"
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter your username"
                 autoComplete="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 disabled={loading}
                 required
               />
@@ -253,10 +247,10 @@ function Landing({ onLogin }) {
                 <input
                   id="login-password"
                   type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
                   required
                 />
@@ -264,44 +258,24 @@ function Landing({ onLogin }) {
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() => setShowPassword((v) => !v)}
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   disabled={loading}
-                  aria-label={
-                    showPassword ? "Hide password" : "Show password"
-                  }
                 >
-                  {showPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
 
-              {error && (
-                <div className="login-error" role="alert">
-                  {error}
-                </div>
-              )}
+              {error && <div className="login-error" role="alert">{error}</div>}
+              {success && <div className="login-success" role="status">{success}</div>}
 
-              {success && (
-                <div className="login-success" role="status">
-                  {success}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="login-button"
-                disabled={loading}
-              >
+              <button type="submit" className="login-button" disabled={loading}>
                 {loading ? "Signing in..." : "Sign In"}
               </button>
             </form>
 
             <div className="signup-prompt">
               <span>Don't have an account?</span>
-
               <button
                 type="button"
                 className="signup-link"
@@ -317,8 +291,7 @@ function Landing({ onLogin }) {
             <div className="landing-heading">Create Your Account</div>
 
             <p className="landing-description">
-              Create a homeowner account to monitor your household water
-              consumption.
+              Create a homeowner account to monitor your water consumption.
             </p>
 
             <form className="login-form" onSubmit={handleSignup}>
@@ -327,12 +300,12 @@ function Landing({ onLogin }) {
               <input
                 id="signup-username"
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
                 placeholder="Choose a username"
                 autoComplete="username"
-                disabled={loading}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 minLength={3}
+                disabled={loading}
                 required
               />
 
@@ -342,29 +315,23 @@ function Landing({ onLogin }) {
                 <input
                   id="signup-password"
                   type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Create a password"
                   autoComplete="new-password"
-                  disabled={loading}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   minLength={4}
+                  disabled={loading}
                   required
                 />
 
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() => setShowPassword((v) => !v)}
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   disabled={loading}
-                  aria-label={
-                    showPassword ? "Hide password" : "Show password"
-                  }
                 >
-                  {showPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
 
@@ -374,10 +341,10 @@ function Landing({ onLogin }) {
                 <input
                   id="signup-confirm"
                   type={showConfirmPassword ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Enter your password again"
                   autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={loading}
                   required
                 />
@@ -385,44 +352,26 @@ function Landing({ onLogin }) {
                 <button
                   type="button"
                   className="password-toggle"
-                  onClick={() => setShowConfirmPassword((v) => !v)}
-                  disabled={loading}
+                  onClick={() => setShowConfirmPassword((value) => !value)}
                   aria-label={
                     showConfirmPassword ? "Hide password" : "Show password"
                   }
+                  disabled={loading}
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff size={18} />
-                  ) : (
-                    <Eye size={18} />
-                  )}
+                  {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
 
-              {error && (
-                <div className="login-error" role="alert">
-                  {error}
-                </div>
-              )}
+              {error && <div className="login-error" role="alert">{error}</div>}
+              {success && <div className="login-success" role="status">{success}</div>}
 
-              {success && (
-                <div className="login-success" role="status">
-                  {success}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="login-button"
-                disabled={loading}
-              >
+              <button type="submit" className="login-button" disabled={loading}>
                 {loading ? "Creating Account..." : "Create Account"}
               </button>
             </form>
 
             <div className="signup-prompt">
               <span>Already have an account?</span>
-
               <button
                 type="button"
                 className="signup-link"
@@ -440,8 +389,9 @@ function Landing({ onLogin }) {
 }
 
 // ============================================================
-// SECTION 2: SIDEBAR
+// SIDEBAR
 // ============================================================
+
 function Sidebar({
   role,
   tab,
@@ -450,7 +400,7 @@ function Sidebar({
   mobileOpen,
   setMobileOpen,
 }) {
-  const nav = role === "admin" ? adminNav : residentNav;
+  const navigation = role === "admin" ? adminNav : residentNav;
 
   return (
     <>
@@ -458,8 +408,8 @@ function Sidebar({
         <button
           type="button"
           className="sidebar-overlay"
-          aria-label="Close navigation menu"
           onClick={() => setMobileOpen(false)}
+          aria-label="Close navigation"
         />
       )}
 
@@ -472,9 +422,7 @@ function Sidebar({
           <div className="brand-text">
             <div className="brand-name">Water Monitoring</div>
             <div className="side-tag">
-              {role === "admin"
-                ? "Administrator Portal"
-                : "Homeowner Portal"}
+              {role === "admin" ? "Administrator Portal" : "Homeowner Portal"}
             </div>
           </div>
 
@@ -490,7 +438,7 @@ function Sidebar({
 
         <div className="menu-label">MENU</div>
 
-        {nav.map(([id, label, Icon]) => (
+        {navigation.map(([id, label, Icon]) => (
           <button
             type="button"
             key={id}
@@ -517,8 +465,9 @@ function Sidebar({
 }
 
 // ============================================================
-// SECTION 3: TOPBAR
+// TOPBAR
 // ============================================================
+
 function Topbar({ role, setMobileOpen, apiOk }) {
   return (
     <header className="topbar">
@@ -557,77 +506,9 @@ function Topbar({ role, setMobileOpen, apiOk }) {
 }
 
 // ============================================================
-// SECTION 4: WATER-SAVING TIPS
+// ADMIN PAGES
 // ============================================================
-function Tips() {
-  const tips = [
-    {
-      title: "Turn Off the Tap",
-      text: "Turn off the tap while brushing your teeth.",
-      icon: Droplets,
-    },
-    {
-      title: "Fix Water Leaks",
-      text: "Fix leaking faucets and pipes immediately.",
-      icon: Settings,
-    },
-    {
-      title: "Use Full Loads",
-      text: "Use washing machines only with full loads.",
-      icon: Database,
-    },
-    {
-      title: "Take Shorter Showers",
-      text: "Take shorter showers to reduce water usage.",
-      icon: Droplets,
-    },
-    {
-      title: "Reuse Water",
-      text: "Reuse suitable water for cleaning or plants.",
-      icon: Lightbulb,
-    },
-  ];
 
-  return (
-    <Card className="tips-card">
-      <div className="tips-heading">
-        <div className="tips-heading-icon">
-          <Lightbulb size={21} />
-        </div>
-
-        <div>
-          <div className="card-title">Water-Saving Recommendations</div>
-          <p className="muted">
-            Simple ways to reduce household water consumption.
-          </p>
-        </div>
-      </div>
-
-      <div className="tips-list">
-        {tips.map((tip, index) => {
-          const Icon = tip.icon;
-
-          return (
-            <div className="tip-row" key={tip.title}>
-              <div className="tip-number">{index + 1}</div>
-              <div className="tip-icon">
-                <Icon size={18} />
-              </div>
-              <div className="tip-content">
-                <strong>{tip.title}</strong>
-                <p>{tip.text}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </Card>
-  );
-}
-
-// ============================================================
-// SECTION 5: ADMIN PAGES
-// ============================================================
 function AdminPage({ tab }) {
   const pages = {
     households: {
@@ -658,42 +539,30 @@ function AdminPage({ tab }) {
 
   const page = pages[tab];
 
-  if (!page) {
-    return (
-      <Card>
-        <div className="card-title">Administrator Dashboard</div>
-        <p className="muted">Welcome to the administration portal.</p>
-      </Card>
-    );
-  }
-
   return (
-    <Card>
-      <div className="card-title">{page.title}</div>
-      <p className="muted">{page.description}</p>
-    </Card>
+    <div className="card">
+      <div className="card-title">
+        {page?.title || "Administrator Dashboard"}
+      </div>
+      <p className="muted">
+        {page?.description || "Welcome to the administration portal."}
+      </p>
+    </div>
   );
 }
 
 // ============================================================
-// SECTION 6: MAIN APP
+// MAIN APP
 // ============================================================
-function App() {
-  // CHANGE 1:
-  // Do NOT restore the role from localStorage.
-  // Every full page reload starts with role = null,
-  // which displays the login page.
-  const [role, setRole] = useState(null);
 
-  // CHANGE 2:
-  // Always initialize the tab to Dashboard.
-  // The user must log in before seeing any application page.
+export default function App() {
+  const [user, setUser] = useState(() => getSessionUser());
+  const [role, setRole] = useState(() => getSessionUser()?.role ?? null);
+
   const [tab, setTab] = useState("dashboard");
-
   const [mobileOpen, setMobileOpen] = useState(false);
   const [apiOk, setApiOk] = useState(false);
 
-  // SECTION 6A: Check whether the backend is available.
   useEffect(() => {
     let active = true;
 
@@ -702,16 +571,12 @@ function App() {
         const response = await fetch(`${API}/api/health`);
 
         if (!response.ok) {
-          throw new Error("Health check failed");
+          throw new Error("Backend health check failed");
         }
 
-        if (active) {
-          setApiOk(true);
-        }
+        if (active) setApiOk(true);
       } catch {
-        if (active) {
-          setApiOk(false);
-        }
+        if (active) setApiOk(false);
       }
     }
 
@@ -725,57 +590,53 @@ function App() {
     };
   }, []);
 
-  // SECTION 6B: Login handler.
-  // Save session information for other app features, but do not
-  // restore the role from storage when the page reloads.
-  function handleLogin(user) {
-    // CHANGE 3: Save the authenticated user's information.
-    localStorage.setItem("waterUser", JSON.stringify(user));
+  function handleLogin(userData) {
+    try {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(userData));
+      localStorage.setItem("waterUser", JSON.stringify(userData));
 
-    if (user.token) {
-      localStorage.setItem("waterToken", user.token);
-    } else {
-      localStorage.removeItem("waterToken");
+      if (userData.token) {
+        localStorage.setItem("waterToken", userData.token);
+      } else {
+        localStorage.removeItem("waterToken");
+      }
+
+      if (userData.householdId != null) {
+        localStorage.setItem(
+          "waterHouseholdId",
+          String(userData.householdId)
+        );
+      } else {
+        localStorage.removeItem("waterHouseholdId");
+      }
+    } catch (error) {
+      console.error("Could not save session:", error);
     }
 
-    if (user.householdId != null) {
-      localStorage.setItem(
-        "waterHouseholdId",
-        String(user.householdId)
-      );
-    } else {
-      localStorage.removeItem("waterHouseholdId");
-    }
-
-    localStorage.setItem("waterActiveTab", "dashboard");
-
+    setUser(userData);
+    setRole(userData.role);
     setTab("dashboard");
     setMobileOpen(false);
-
-    // This state exists only for the current page session.
-    setRole(user.role);
   }
 
-  // SECTION 6C: Logout handler.
   function handleLogout() {
+    sessionStorage.removeItem(SESSION_KEY);
+
     localStorage.removeItem("waterUser");
     localStorage.removeItem("waterToken");
     localStorage.removeItem("waterHouseholdId");
     localStorage.removeItem("waterActiveTab");
 
-    setMobileOpen(false);
-    setTab("dashboard");
+    setUser(null);
     setRole(null);
+    setTab("dashboard");
+    setMobileOpen(false);
   }
 
-  // CHANGE 4:
-  // Show login whenever there is no role in the current React session.
-  // After a refresh, role starts as null, so this page appears.
-  if (!role) {
+  if (!user || !role) {
     return <Landing onLogin={handleLogin} />;
   }
 
-  // SECTION 6D: Page titles and descriptions.
   const pageInfo = {
     dashboard: {
       title: "Dashboard",
@@ -787,12 +648,11 @@ function App() {
     },
     forecast: {
       title: "Forecast",
-      subtitle:
-        "Estimated future water consumption based on your records.",
+      subtitle: "Estimated future water consumption based on your records.",
     },
     tips: {
       title: "Water-Saving Tips",
-      subtitle: "Recommendations to help reduce water consumption.",
+      subtitle: "Recommendations to reduce water consumption.",
     },
     households: {
       title: "Households",
@@ -820,7 +680,6 @@ function App() {
     },
   };
 
-  // SECTION 6E: Restrict navigation according to the user's role.
   const allowedTabs =
     role === "admin"
       ? adminNav.map(([id]) => id)
@@ -829,7 +688,6 @@ function App() {
   const visibleTab = allowedTabs.includes(tab) ? tab : "dashboard";
   const currentPage = pageInfo[visibleTab] || pageInfo.dashboard;
 
-  // SECTION 6F: Main application layout.
   return (
     <div className="app-shell">
       <Sidebar
@@ -849,9 +707,7 @@ function App() {
         />
 
         <main className="content">
-          {/* CHANGE 5:
-              Dashboard and Forecast already have their own page headers. */}
-          {visibleTab !== "dashboard" && visibleTab !== "forecast" && (
+          {visibleTab !== "dashboard" && (
             <div className="page-head">
               <h1>{currentPage.title}</h1>
               <p>{currentPage.subtitle}</p>
@@ -870,7 +726,10 @@ function App() {
             <Forecast />
           )}
 
-          {role === "resident" && visibleTab === "tips" && <Tips />}
+          {/* Use the separate recommendation page, not static tips. */}
+          {role === "resident" && visibleTab === "tips" && (
+            <Recommendation />
+          )}
 
           {role === "admin" && <AdminPage tab={visibleTab} />}
         </main>
@@ -878,5 +737,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
