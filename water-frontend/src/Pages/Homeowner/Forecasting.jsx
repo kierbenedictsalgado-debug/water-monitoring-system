@@ -154,6 +154,8 @@ function getForecastDate(record, index) {
     if (key) return key;
   }
 
+  // The API currently returns forecast steps without explicit dates.
+  // Derive dates from the latest available local calendar date.
   const date = new Date();
   date.setHours(12, 0, 0, 0);
   date.setDate(date.getDate() + index + 1);
@@ -161,16 +163,18 @@ function getForecastDate(record, index) {
   return getDateKey(date);
 }
 
-function normalizeForecasts(result, horizon) {
+function normalizeForecasts(result, horizon, lastHistoryDate) {
   const rawForecasts = Array.isArray(result)
     ? result
     : Array.isArray(result?.forecasts)
       ? result.forecasts
-      : Array.isArray(result?.predictions)
-        ? result.predictions
-        : Array.isArray(result?.data)
-          ? result.data
-          : [];
+      : Array.isArray(result?.forecast)
+        ? result.forecast
+        : Array.isArray(result?.predictions)
+          ? result.predictions
+          : Array.isArray(result?.data)
+            ? result.data
+            : [];
 
   return rawForecasts
     .map((record, index) => {
@@ -187,7 +191,30 @@ function normalizeForecasts(result, horizon) {
           item?.value
       );
 
-      const dateKey = getForecastDate(item || {}, index);
+      let dateKey = "";
+
+      const rawDate =
+        item?.date ||
+        item?.forecast_date ||
+        item?.timestamp ||
+        item?.ds;
+
+      if (rawDate) {
+        dateKey = getDateKey(rawDate);
+      }
+
+      if (!dateKey && lastHistoryDate) {
+        const date = new Date(`${lastHistoryDate}T12:00:00`);
+
+        if (!Number.isNaN(date.getTime())) {
+          date.setDate(date.getDate() + index + 1);
+          dateKey = getDateKey(date);
+        }
+      }
+
+      if (!dateKey) {
+        dateKey = getForecastDate(item || {}, index);
+      }
 
       return {
         dateKey,
@@ -202,6 +229,20 @@ function normalizeForecasts(result, horizon) {
         record.predicted >= 0
     )
     .slice(0, Number(horizon));
+}
+
+function getMethodLabel(method) {
+  const normalized = String(method || "").toLowerCase();
+
+  if (normalized === "lstm") return "LSTM";
+  if (
+    normalized === "moving_average_baseline" ||
+    normalized === "moving_average_backtesting"
+  ) {
+    return "Moving Average Baseline";
+  }
+
+  return method || "Unknown";
 }
 
 export default function Forecasting() {
@@ -226,14 +267,16 @@ export default function Forecasting() {
   const [dataError, setDataError] = useState("");
   const [forecastError, setForecastError] = useState("");
   const [modelStatus, setModelStatus] = useState("Waiting");
+  const [forecastMethod, setForecastMethod] = useState("");
   const [historicalRecordsUsed, setHistoricalRecordsUsed] =
     useState(null);
 
-  // Backtesting evaluation state from the Python API.
+  // These evaluation values belong to the method returned by /evaluate.
   const [evaluation, setEvaluation] = useState({
     count: 0,
     mae: null,
     rmse: null,
+    method: "",
     error: "",
     loading: false,
   });
@@ -376,6 +419,7 @@ export default function Forecasting() {
     async function loadForecast() {
       setForecastError("");
       setForecasts([]);
+      setForecastMethod("");
       setHistoricalRecordsUsed(null);
 
       if (!dailyRecords.length) {
@@ -425,27 +469,46 @@ export default function Forecasting() {
         }
 
         const result = await response.json();
-        const normalized = normalizeForecasts(result, horizon);
+        const lastHistoryDate = history.at(-1)?.date || "";
+
+        const normalized = normalizeForecasts(
+          result,
+          horizon,
+          lastHistoryDate
+        );
 
         if (!active) return;
 
         setForecasts(normalized);
+        setForecastMethod(result.method || "");
 
         setHistoricalRecordsUsed(
-          getNumber(result.historical_records_used) ?? history.length
+          getNumber(
+            result.historical_records_used ??
+              result.history_records
+          ) ?? history.length
         );
 
-        setModelStatus(normalized.length ? "Connected" : "Waiting");
-
         if (!normalized.length) {
+          setModelStatus("Waiting");
           setForecastError(
             "The Python service responded, but it returned no usable predictions. Check its response format and forecasting logic."
           );
+          return;
         }
+
+        setModelStatus(
+          result.method === "lstm"
+            ? "LSTM Connected"
+            : result.method === "moving_average_baseline"
+              ? "Baseline Connected"
+              : "Connected — Method Unknown"
+        );
       } catch (error) {
         if (!active) return;
 
         setForecasts([]);
+        setForecastMethod("");
         setModelStatus("Unavailable");
         setForecastError(
           error.message ||
@@ -461,8 +524,8 @@ export default function Forecasting() {
     };
   }, [horizon, dailyRecords]);
 
-  // Evaluate historical predictions against actual records.
-  // This calls the /evaluate endpoint added to app.py.
+  // Evaluate historical records using the method implemented by /evaluate.
+  // The current Python implementation evaluates a moving-average baseline.
   useEffect(() => {
     let active = true;
 
@@ -472,6 +535,7 @@ export default function Forecasting() {
           count: 0,
           mae: null,
           rmse: null,
+          method: "",
           error:
             "At least 3 daily records are required for backtesting.",
           loading: false,
@@ -515,9 +579,14 @@ export default function Forecasting() {
         if (!active) return;
 
         setEvaluation({
-          count: Number(result.evaluation_records) || 0,
+          count: Number(
+            result.evaluation_records ??
+              result.records_evaluated ??
+              result.count
+          ) || 0,
           mae: getNumber(result.mae),
           rmse: getNumber(result.rmse),
+          method: result.method || result.evaluation_model || "",
           error: "",
           loading: false,
         });
@@ -528,6 +597,7 @@ export default function Forecasting() {
           count: 0,
           mae: null,
           rmse: null,
+          method: "",
           error:
             error.message ||
             "Could not calculate evaluation metrics.",
@@ -863,7 +933,9 @@ export default function Forecasting() {
                     <td>{record.date}</td>
                     <td>{formatNumber(record.predicted)} L</td>
                     <td>
-                      <span className="confidence">Forecast</span>
+                      <span className="confidence">
+                        {getMethodLabel(forecastMethod)}
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -1009,10 +1081,11 @@ export default function Forecasting() {
           <span className="forecast-icon purple">%</span>
 
           <div>
-            <h2>Forecast Confidence &amp; Evaluation</h2>
+            <h2>Forecast Evaluation</h2>
             <p>
-              MAE and RMSE evaluate historical predictions against
-              actual recorded daily consumption.
+              MAE and RMSE measure historical prediction errors for the
+              evaluation method shown below. These are not automatically
+              LSTM accuracy metrics.
             </p>
           </div>
         </div>
@@ -1043,17 +1116,21 @@ export default function Forecasting() {
           </div>
 
           <div>
-            <small>Model status</small>
-            <strong>{modelStatus}</strong>
+            <small>Forecast method</small>
+            <strong>
+              {forecastMethod
+                ? getMethodLabel(forecastMethod)
+                : modelStatus}
+            </strong>
             <p>
               {forecasts.length
                 ? `${forecasts.length} prediction(s) received`
-                : "Waiting for actual forecast results"}
+                : "Waiting for forecast results"}
             </p>
 
             {historicalRecordsUsed !== null && (
               <p>
-                Historical records sent: {historicalRecordsUsed}
+                Historical records used: {historicalRecordsUsed}
               </p>
             )}
           </div>
@@ -1066,7 +1143,7 @@ export default function Forecasting() {
                 : evaluation.loading
                   ? "Evaluating historical records..."
                   : evaluation.count
-                    ? `MAE and RMSE were calculated using ${evaluation.count} historical backtesting comparison(s). Lower values indicate smaller prediction errors.`
+                    ? `${evaluation.method ? `Evaluation method: ${getMethodLabel(evaluation.method)}. ` : ""}MAE and RMSE were calculated using ${evaluation.count} historical backtesting comparison(s). Lower values indicate smaller prediction errors.`
                     : "Backtesting results will appear when enough historical daily records are available."}
             </p>
           </aside>
@@ -1074,10 +1151,11 @@ export default function Forecasting() {
       </section>
 
       <p className="forecast-footer">
-        Forecasts are estimates based on available records and may differ
-        from actual water consumption. MAE and RMSE are based on historical
-        backtesting. The current Python service uses a moving-average
-        baseline, not a trained LSTM model.
+        Forecasts are estimates based on available historical records and
+        may differ from actual water consumption. The forecast method is
+        displayed above. Evaluation metrics are labeled separately and
+        should not be interpreted as LSTM performance unless the evaluation
+        endpoint specifically evaluates the trained LSTM model.
       </p>
     </main>
   );

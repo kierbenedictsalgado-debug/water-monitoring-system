@@ -1,21 +1,21 @@
 
-from datetime import date
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from forecast import (
-    evaluate_forecast,
-    get_daily_records,
-    moving_average_forecast,
-)
+from forecast import evaluate_forecast, get_daily_records
+from train_model import forecast_next_days
+
 
 app = FastAPI(
     title="Water Consumption Forecasting API",
-    description="Baseline water consumption forecasting and evaluation.",
-    version="1.0.0",
+    description=(
+        "LSTM-based water consumption forecasting with a separately "
+        "identified moving-average baseline evaluation."
+    ),
+    version="2.0.0",
 )
 
 app.add_middleware(
@@ -38,7 +38,7 @@ class HistoryRecord(BaseModel):
 
 
 class ForecastRequest(BaseModel):
-    days: int = Field(default=7, ge=1, le=90)
+    days: int = Field(default=7, ge=1, le=30)
     history: Optional[list[HistoryRecord]] = None
 
 
@@ -60,13 +60,23 @@ def root():
     return {
         "status": "ok",
         "message": "Water Consumption Forecasting API is running.",
-        "endpoints": ["/forecast", "/evaluate", "/health"],
+        "forecast_method": "lstm",
+        "evaluation_method": "moving_average_backtesting",
+        "endpoints": [
+            "/forecast",
+            "/evaluate",
+            "/health",
+            "/daily-records",
+        ],
     }
 
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "forecast_method": "lstm",
+    }
 
 
 @app.get("/daily-records")
@@ -88,31 +98,46 @@ def forecast(request: ForecastRequest):
                 ),
             )
 
-        predictions = moving_average_forecast(
-            history,
+        result = forecast_next_days(
             days=request.days,
+            records=history,
         )
 
+        # Keep response fields compatible with the existing React page.
+        predictions = [
+            item["consumption"]
+            for item in result["forecasts"]
+        ]
+
         return {
-            "method": "moving_average_baseline",
+            "method": result["method"],
             "days": request.days,
-            "history_records": len(history),
-            "forecast": [
-                {
-                    "day": index + 1,
-                    "consumption": value,
-                }
-                for index, value in enumerate(predictions)
-            ],
+            "history_records": result["historical_records_used"],
+            "historical_records_used": result["historical_records_used"],
+            "forecast": result["forecasts"],
+            "forecasts": result["forecasts"],
             "predictions": predictions,
         }
 
     except HTTPException:
         raise
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"{error} Train the LSTM model before requesting "
+                "an LSTM forecast."
+            ),
+        ) from error
+    except (ValueError, RuntimeError) as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
     except Exception as error:
         raise HTTPException(
             status_code=500,
-            detail=f"Forecast calculation failed: {error}",
+            detail=f"LSTM forecast failed: {error}",
         ) from error
 
 
@@ -126,11 +151,17 @@ def evaluate(request: ForecastRequest):
                 status_code=400,
                 detail=(
                     "At least 3 daily historical records are required "
-                    "to evaluate the forecast."
+                    "for baseline backtesting."
                 ),
             )
 
-        return evaluate_forecast(history)
+        result = evaluate_forecast(history)
+
+        # Make it explicit that these metrics are not LSTM metrics.
+        result["method"] = "moving_average_backtesting"
+        result["evaluation_model"] = "moving_average_baseline"
+
+        return result
 
     except HTTPException:
         raise

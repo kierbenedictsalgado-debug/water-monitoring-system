@@ -357,23 +357,36 @@ def train_model():
 # 7. PREDICT FROM THE SAVED MODEL
 # ============================================================
 
-def forecast_next_days(days=7):
+def forecast_next_days(days=7, records=None):
     """
-    Forecast multiple days recursively from the saved LSTM model.
+    Forecast future daily consumption using the saved LSTM model.
 
-    The existing backend must provide the historical daily records.
+    Args:
+        days: Number of days to forecast (1–30).
+        records: Optional historical records supplied by the API.
+                 If omitted, records are fetched from the Node.js backend.
     """
 
     if not isinstance(days, int) or not 1 <= days <= 30:
         raise ValueError("days must be an integer between 1 and 30.")
 
-    if not MODEL_PATH.exists() or not SCALER_PATH.exists():
+    if not MODEL_PATH.exists():
         raise FileNotFoundError(
-            "The trained model or scaler is missing. Run train_model.py "
-            "successfully before requesting forecasts."
+            f"Trained LSTM model not found: {MODEL_PATH}. "
+            "Run train_model.py successfully before requesting forecasts."
         )
 
-    records = fetch_daily_records()
+    if not SCALER_PATH.exists():
+        raise FileNotFoundError(
+            f"LSTM scaler not found: {SCALER_PATH}. "
+            "Run train_model.py successfully before requesting forecasts."
+        )
+
+    # Use API-provided history when available.
+    # Otherwise, fetch history directly from the Node.js backend.
+    if records is None:
+        records = fetch_daily_records()
+
     dataframe = prepare_daily_data(records)
 
     with SCALER_PATH.open("r", encoding="utf-8") as file:
@@ -383,9 +396,16 @@ def forecast_next_days(days=7):
     minimum = float(scaler["minimum"])
     scale = float(scaler["scale"])
 
+    if sequence_length < 1:
+        raise ValueError("The saved model has an invalid sequence length.")
+
+    if scale <= 0:
+        raise ValueError("The saved scaler has an invalid scale.")
+
     if len(dataframe) < sequence_length:
         raise ValueError(
-            f"At least {sequence_length} daily records are required to forecast."
+            f"At least {sequence_length} usable daily records are required; "
+            f"only {len(dataframe)} were provided."
         )
 
     values = dataframe["consumption"].to_numpy(dtype=np.float32)
@@ -402,16 +422,28 @@ def forecast_next_days(days=7):
             dtype=np.float32,
         ).reshape(1, sequence_length, 1)
 
-        predicted_scaled = float(model.predict(input_sequence, verbose=0)[0, 0])
-        predicted_consumption = max(0.0, predicted_scaled * scale + minimum)
+        predicted_scaled = float(
+            model.predict(input_sequence, verbose=0)[0, 0]
+        )
+
+        # Convert the prediction back to the original consumption unit.
+        predicted_consumption = max(
+            0.0,
+            predicted_scaled * scale + minimum,
+        )
 
         forecasts.append({
             "day": day,
             "consumption": round(predicted_consumption, 3),
         })
 
-        # Append the predicted normalized value for the next forecast step.
-        history.append(predicted_scaled)
+        # Convert the nonnegative forecast back to the scaler's range
+        # before using it as input for the next recursive prediction.
+        normalized_prediction = max(
+            0.0,
+            (predicted_consumption - minimum) / scale,
+        )
+        history.append(normalized_prediction)
 
     return {
         "method": "lstm",
