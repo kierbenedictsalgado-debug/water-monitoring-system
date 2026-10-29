@@ -2336,3 +2336,1246 @@ select:focus {
     flex-direction: column;
   }
 }
+
+/* =========================================
+   PASSWORD SECURITY CHECKLIST
+========================================= */
+
+.password-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0 14px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #dbe3ed;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.password-requirements-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 3px;
+  color: #12345a;
+  font-weight: 700;
+}
+
+.password-requirements-heading span:last-child {
+  color: #0891b2;
+}
+
+.password-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.password-rule svg {
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.password-rule.passed,
+.password-rule.passed svg {
+  color: #15803d;
+}
+
+.password-success {
+  margin: 3px 0 0;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================================
+   CONFIRM PASSWORD FEEDBACK
+========================================= */
+
+.password-match {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.password-match.match {
+  color: #15803d;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.password-match.no-match {
+  color: #dc2626;
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+}
+
+/* =========================================
+   DISABLED CREATE ACCOUNT BUTTON
+========================================= */
+
+.login-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ==========================================
+   WATER MONITORING SYSTEM - LOGIN DESIGN
+========================================== */
+
+.landing {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px;
+  box-sizing: border-box;
+
+  background:
+    radial-gradient(
+      circle at 10% 15%,
+      rgba(13, 184, 199, 0.20),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 90% 85%,
+      rgba(14, 116, 144, 0.16),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      #e9fbfc 0%,
+      #f4fcfd 48%,
+      #dff5f8 100%
+    );
+}
+
+/* Decorative background circles */
+
+.landing::before,
+.landing::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.landing::before {
+  width: 300px;
+  height: 300px;
+  top: -120px;
+  right: -70px;
+  border: 1px solid rgba(0, 153, 173, 0.16);
+  box-shadow:
+    0 0 0 25px rgba(0, 153, 173, 0.035),
+    0 0 0 50px rgba(0, 153, 173, 0.025);
+}
+
+.landing::after {
+  width: 240px;
+  height: 240px;
+  bottom: -110px;
+  left: -80px;
+  border: 1px solid rgba(0, 153, 173, 0.16);
+  box-shadow:
+    0 0 0 25px rgba(0, 153, 173, 0.035),
+    0 0 0 50px rgba(0, 153, 173, 0.025);
+}
+
+/* ==========================================
+   LOGIN CARD
+========================================== */
+
+.landing .login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 500px;
+  padding: 42px 40px 34px;
+  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 26px;
+
+  box-shadow:
+    0 24px 70px rgba(15, 75, 95, 0.11),
+    0 5px 18px rgba(15, 75, 95, 0.045);
+
+  animation: loginCardAppear 0.6s ease both;
+}
+
+/* ==========================================
+   WATER LOGO
+========================================== */
+
+.landing .login-logo {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+
+  background: linear-gradient(
+    145deg,
+    #08b5c4,
+    #008da5
+  );
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 12px 28px rgba(0, 159, 179, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.landing .login-logo:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 16px 32px rgba(0, 159, 179, 0.30);
+}
+
+/* ==========================================
+   SYSTEM TITLE
+========================================== */
+
+.landing .login-card h1 {
+  margin: 0;
+  color: #123c5a;
+  font-size: clamp(25px, 4vw, 32px);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.8px;
+  text-align: center;
+}
+
+.landing .login-subtitle {
+  margin: 12px 0 30px;
+  color: #71869b;
+  font-size: 13px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* ==========================================
+   LOGIN / SIGNUP HEADING
+========================================== */
+
+.landing .landing-heading {
+  margin: 0 0 10px;
+  color: #123c5a;
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.landing .landing-description {
+  margin: 0 0 24px;
+  color: #687f93;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   LOGIN FORM
+========================================== */
+
+.landing .login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.landing .login-form label {
+  display: block;
+  margin: 0 0 8px;
+  color: #24445d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.landing .login-form input {
+  width: 100%;
+  min-width: 0;
+  height: 49px;
+  padding: 0 15px;
+  box-sizing: border-box;
+
+  color: #183b55;
+  background: #f9fcfd;
+
+  border: 1px solid #d5e5ec;
+  border-radius: 12px;
+  outline: none;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.landing .login-form input::placeholder {
+  color: #9aabba;
+}
+
+.landing .login-form input:hover {
+  border-color: #a5d6df;
+}
+
+.landing .login-form input:focus {
+  background: #ffffff;
+  border-color: #06a6b7;
+  box-shadow: 0 0 0 4px rgba(6, 166, 183, 0.11);
+}
+
+/* Spacing between fields */
+
+.landing .login-form > label:not(:first-child) {
+  margin-top: 22px;
+}
+
+/* ==========================================
+   PASSWORD FIELD
+========================================== */
+
+.landing .password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.landing .password-field input {
+  padding-right: 48px;
+}
+
+.landing .password-toggle {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 35px;
+  height: 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  color: #087d9b;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.landing .password-toggle:hover {
+  color: #005d75;
+  background: #e5f7f9;
+}
+
+/* ==========================================
+   SIGN IN / CREATE ACCOUNT BUTTON
+========================================== */
+
+.landing .login-button {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 24px;
+  padding: 13px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+  background: linear-gradient(
+    110deg,
+    #08aebc 0%,
+    #008fa8 100%
+  );
+
+  border: none;
+  border-radius: 12px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 750;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 9px 20px rgba(0, 153, 173, 0.18);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.landing .login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow:
+    0 13px 26px rgba(0, 153, 173, 0.26);
+}
+
+.landing .login-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.landing .login-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+/* ==========================================
+   SIGNUP PROMPT
+========================================== */
+
+.landing .signup-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+
+  margin-top: 24px;
+  color: #8495a6;
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.landing .signup-link {
+  padding: 2px 3px;
+
+  color: #009eaf;
+  background: transparent;
+  border: none;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.landing .signup-link:hover {
+  color: #006d83;
+  text-decoration: underline;
+}
+
+/* ==========================================
+   ERROR AND SUCCESS MESSAGES
+========================================== */
+
+.landing .login-error {
+  margin-top: 14px;
+  padding: 12px 14px;
+
+  color: #c43d45;
+  background: #fff4f4;
+  border: 1px solid #ffd0d0;
+  border-radius: 10px;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.landing .login-success {
+  margin-top: 14px;
+  padding: 12px 14px;
+
+  color: #167848;
+  background: #effcf5;
+  border: 1px solid #bcebd0;
+  border-radius: 10px;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   PASSWORD REQUIREMENTS
+========================================== */
+
+.landing .password-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  margin: 12px 0 20px;
+  padding: 14px;
+
+  background: #f6fafc;
+  border: 1px solid #e0ebf0;
+  border-radius: 12px;
+
+  font-size: 12px;
+}
+
+.landing .password-requirements-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 3px;
+
+  color: #24445d;
+  font-weight: 750;
+}
+
+.landing .password-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #7c8e9e;
+  line-height: 1.5;
+}
+
+.landing .password-rule svg {
+  flex-shrink: 0;
+  color: #a5b4c0;
+}
+
+.landing .password-rule.passed,
+.landing .password-rule.passed svg {
+  color: #16804a;
+}
+
+.landing .password-success {
+  margin: 3px 0 0;
+  color: #16804a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.landing .password-match {
+  margin-top: 9px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.landing .password-match.match {
+  color: #16804a;
+  background: #effcf5;
+  border: 1px solid #bcebd0;
+}
+
+.landing .password-match.no-match {
+  color: #c43d45;
+  background: #fff4f4;
+  border: 1px solid #ffd0d0;
+}
+
+/* ==========================================
+   ANIMATION
+========================================== */
+
+@keyframes loginCardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================
+   MOBILE RESPONSIVENESS
+========================================== */
+
+@media (max-width: 600px) {
+  .landing {
+    padding: 22px 14px;
+  }
+
+  .landing .login-card {
+    max-width: 440px;
+    padding: 30px 23px 25px;
+    border-radius: 22px;
+  }
+
+  .landing .login-logo {
+    width: 66px;
+    height: 66px;
+    margin-bottom: 19px;
+    border-radius: 19px;
+  }
+
+  .landing .login-card h1 {
+    font-size: 25px;
+    letter-spacing: -0.6px;
+  }
+
+  .landing .login-subtitle {
+    margin-bottom: 26px;
+    font-size: 12px;
+  }
+
+  .landing .landing-heading {
+    font-size: 20px;
+  }
+
+  .landing .landing-description {
+    font-size: 13px;
+  }
+
+  .landing .login-form input {
+    height: 47px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing .login-card {
+    animation: none;
+  }
+
+  .landing *,
+  .landing *::before,
+  .landing *::after {
+    transition: none !important;
+  }
+}
+
+/* =====================================================
+   WATER MONITORING SYSTEM - PREMIUM LOGIN DESIGN
+===================================================== */
+
+.landing {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 38px 20px;
+  box-sizing: border-box;
+
+  background:
+    radial-gradient(
+      ellipse at 5% 10%,
+      rgba(0, 187, 201, 0.24),
+      transparent 36%
+    ),
+    radial-gradient(
+      ellipse at 95% 85%,
+      rgba(0, 116, 153, 0.20),
+      transparent 38%
+    ),
+    linear-gradient(
+      135deg,
+      #d9f4f7 0%,
+      #f3fcfd 48%,
+      #d8f2f6 100%
+    );
+}
+
+/* Decorative water ripple circles */
+
+.landing .login-decoration {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid rgba(0, 146, 171, 0.15);
+  border-radius: 50%;
+}
+
+.landing .decoration-one {
+  width: 390px;
+  height: 390px;
+  top: -180px;
+  right: -110px;
+
+  box-shadow:
+    0 0 0 25px rgba(0, 146, 171, 0.04),
+    0 0 0 52px rgba(0, 146, 171, 0.03),
+    0 0 0 82px rgba(0, 146, 171, 0.02);
+}
+
+.landing .decoration-two {
+  width: 320px;
+  height: 320px;
+  bottom: -160px;
+  left: -100px;
+
+  box-shadow:
+    0 0 0 25px rgba(0, 146, 171, 0.04),
+    0 0 0 52px rgba(0, 146, 171, 0.03),
+    0 0 0 82px rgba(0, 146, 171, 0.02);
+}
+
+/* Login card */
+
+.landing .login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 500px;
+  padding: 40px 40px 32px;
+  box-sizing: border-box;
+
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 27px;
+
+  box-shadow:
+    0 28px 75px rgba(15, 70, 91, 0.13),
+    0 5px 20px rgba(15, 70, 91, 0.04);
+
+  animation: premiumLoginAppear 0.55s ease both;
+}
+
+@keyframes premiumLoginAppear {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo */
+
+.landing .login-logo {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+  background: linear-gradient(
+    145deg,
+    #0bc1cd,
+    #0097af 60%,
+    #007f9b
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 23px;
+
+  box-shadow:
+    0 14px 30px rgba(0, 153, 177, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+  transition: transform 0.25s ease;
+}
+
+.landing .login-logo:hover {
+  transform: translateY(-3px);
+}
+
+/* System title */
+
+.landing .login-brand {
+  text-align: center;
+}
+
+.landing .login-card h1 {
+  margin: 0;
+  color: #103b59;
+
+  font-size: clamp(26px, 4vw, 32px);
+  font-weight: 850;
+  line-height: 1.25;
+  letter-spacing: -1px;
+}
+
+.landing .login-subtitle {
+  max-width: 350px;
+  margin: 12px auto 32px;
+
+  color: #74879a;
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.8;
+  letter-spacing: 0.25px;
+}
+
+/* Welcome section */
+
+.landing .welcome-section {
+  margin: 0 0 26px;
+}
+
+.landing .welcome-eyebrow {
+  display: block;
+  margin-bottom: 10px;
+
+  color: #008fa5;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  line-height: 1.5;
+}
+
+.landing .login-card .login-welcome-heading {
+  margin: 0 0 14px;
+
+  color: #123b58;
+  font-size: clamp(27px, 4vw, 30px);
+  font-weight: 850;
+  line-height: 1.3;
+  letter-spacing: -0.9px;
+  text-align: left;
+}
+
+.landing .welcome-period {
+  color: #00aabd;
+}
+
+.landing .login-card .login-welcome-heading::after {
+  content: "";
+  display: block;
+
+  width: 52px;
+  height: 4px;
+  margin-top: 12px;
+
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    #0bc1cd,
+    #0089a5
+  );
+
+  box-shadow: 0 3px 10px rgba(0, 166, 186, 0.2);
+}
+
+/* Water insights description */
+
+.landing .login-card .login-welcome-description {
+  max-width: 390px;
+  margin: 0;
+
+  color: #627b90;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.9;
+  letter-spacing: 0.15px;
+  text-align: left;
+}
+
+/* Form */
+
+.landing .login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.landing .login-form label {
+  display: block;
+  margin: 0 0 8px;
+
+  color: #24445d;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.3px;
+}
+
+.landing .login-form > label:not(:first-child) {
+  margin-top: 21px;
+}
+
+.landing .login-form input {
+  width: 100%;
+  min-width: 0;
+  height: 49px;
+  padding: 0 15px;
+  box-sizing: border-box;
+
+  color: #173e58;
+  background: #f9fcfd;
+
+  border: 1px solid #d6e7ed;
+  border-radius: 12px;
+  outline: none;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.landing .login-form input::placeholder {
+  color: #9aabba;
+}
+
+.landing .login-form input:hover {
+  border-color: #a7d5df;
+}
+
+.landing .login-form input:focus {
+  background: #ffffff;
+  border-color: #08a8ba;
+
+  box-shadow:
+    0 0 0 4px rgba(8, 168, 186, 0.1);
+}
+
+/* Password input and visibility button */
+
+.landing .password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.landing .password-field input {
+  padding-right: 48px;
+}
+
+.landing .password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  transform: translateY(-50%);
+
+  width: 35px;
+  height: 35px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #087d9b;
+  background: transparent;
+  border: 0;
+  border-radius: 9px;
+
+  cursor: pointer;
+}
+
+.landing .password-toggle:hover {
+  background: #e6f7f9;
+}
+
+/* Sign in / create account button */
+
+.landing .login-button {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 24px;
+  padding: 13px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+  background: linear-gradient(
+    110deg,
+    #08b5c2,
+    #0094aa 58%,
+    #00859e
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 13px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 23px rgba(0, 148, 170, 0.21),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.landing .login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+
+  box-shadow:
+    0 14px 28px rgba(0, 130, 153, 0.27);
+}
+
+.landing .login-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.landing .login-button:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.landing .button-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.landing .button-arrow {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.landing .button-spinner {
+  width: 15px;
+  height: 15px;
+
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+
+  animation: loginSpinner 0.7s linear infinite;
+}
+
+@keyframes loginSpinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Sign-up prompt */
+
+.landing .signup-prompt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+
+  margin-top: 25px;
+
+  color: #7b8ea0;
+  font-size: 12px;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.landing .signup-link {
+  padding: 2px 3px;
+
+  color: #009bad;
+  background: transparent;
+  border: none;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.landing .signup-link:hover {
+  color: #006d84;
+  text-decoration: underline;
+}
+
+/* Error and success messages */
+
+.landing .login-error,
+.landing .login-success {
+  margin-top: 14px;
+  padding: 12px 14px;
+
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.landing .login-error {
+  color: #bd3945;
+  background: #fff4f4;
+  border: 1px solid #ffd0d0;
+}
+
+.landing .login-success {
+  color: #167848;
+  background: #effcf5;
+  border: 1px solid #bcebd0;
+}
+
+/* Password security checklist */
+
+.landing .password-requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  margin: 12px 0 20px;
+  padding: 14px;
+
+  background: #f6fafc;
+  border: 1px solid #e0ebf0;
+  border-radius: 12px;
+
+  font-size: 12px;
+}
+
+.landing .password-requirements-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 3px;
+
+  color: #24445d;
+  font-weight: 750;
+}
+
+.landing .password-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #7c8e9e;
+  line-height: 1.5;
+}
+
+.landing .password-rule svg {
+  flex-shrink: 0;
+  color: #a5b4c0;
+}
+
+.landing .password-rule.passed,
+.landing .password-rule.passed svg {
+  color: #16804a;
+}
+
+.landing .password-success {
+  margin: 3px 0 0;
+  color: #16804a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.landing .password-match {
+  margin-top: 9px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.landing .password-match.match {
+  color: #16804a;
+  background: #effcf5;
+  border: 1px solid #bcebd0;
+}
+
+.landing .password-match.no-match {
+  color: #bd3945;
+  background: #fff4f4;
+  border: 1px solid #ffd0d0;
+}
+
+/* Responsive design */
+
+@media (max-width: 600px) {
+  .landing {
+    padding: 22px 14px;
+  }
+
+  .landing .login-card {
+    max-width: 440px;
+    padding: 30px 23px 25px;
+    border-radius: 23px;
+  }
+
+  .landing .login-logo {
+    width: 66px;
+    height: 66px;
+    margin-bottom: 19px;
+    border-radius: 20px;
+  }
+
+  .landing .login-card h1 {
+    font-size: 25px;
+    letter-spacing: -0.7px;
+  }
+
+  .landing .login-subtitle {
+    margin-bottom: 28px;
+    font-size: 12px;
+  }
+
+  .landing .login-card .login-welcome-heading {
+    font-size: 25px;
+  }
+
+  .landing .login-card .login-welcome-description {
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .landing .decoration-one {
+    width: 280px;
+    height: 280px;
+  }
+
+  .landing .decoration-two {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .landing .login-card,
+  .landing .button-spinner {
+    animation: none !important;
+  }
+
+  .landing *,
+  .landing *::before,
+  .landing *::after {
+    transition: none !important;
+  }
+}

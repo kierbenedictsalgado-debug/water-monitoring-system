@@ -1,0 +1,266 @@
+
+from typing import Optional
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+from forecast import evaluate_forecast, get_daily_records
+from train_model import forecast_next_days
+from random_forest import forecast_random_forest
+
+
+app = FastAPI(
+    title="Water Consumption Forecasting API",
+    description=(
+        "Water consumption forecasting using LSTM and Random Forest, "
+        "with a separately identified moving-average baseline evaluation."
+    ),
+    version="2.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+class HistoryRecord(BaseModel):
+    date: str
+    consumption: float = Field(ge=0)
+
+
+class ForecastRequest(BaseModel):
+    days: int = Field(default=7, ge=1, le=30)
+    history: Optional[list[HistoryRecord]] = None
+
+
+def get_history(request_history):
+    """Use supplied history or retrieve records from the backend."""
+    if request_history is not None:
+        records = [
+            record.model_dump()
+            for record in request_history
+        ]
+    else:
+        records = get_daily_records()
+
+    records.sort(key=lambda item: item["date"])
+    return records
+
+
+@app.get("/")
+def root():
+    return {
+        "status": "ok",
+        "message": "Water Consumption Forecasting API is running.",
+        "forecast_methods": [
+            "lstm",
+            "random_forest",
+        ],
+        "evaluation_method": "moving_average_backtesting",
+        "endpoints": [
+            "/forecast",
+            "/forecast/random-forest",
+            "/evaluate",
+            "/health",
+            "/daily-records",
+        ],
+    }
+
+
+@app.get("/health")
+def health():
+    return {
+        "status": "ok",
+        "forecast_methods": [
+            "lstm",
+            "random_forest",
+        ],
+    }
+
+
+@app.get("/daily-records")
+def daily_records():
+    return {"records": get_daily_records()}
+
+
+# --------------------------------------------------
+# LSTM FORECASTING
+# Existing endpoint preserved
+# --------------------------------------------------
+
+@app.post("/forecast")
+def forecast(request: ForecastRequest):
+    try:
+        history = get_history(request.history)
+
+        if not history:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "No historical consumption records were provided "
+                    "or retrieved from the Node.js backend."
+                ),
+            )
+
+        result = forecast_next_days(
+            days=request.days,
+            records=history,
+        )
+
+        predictions = [
+            item["consumption"]
+            for item in result["forecasts"]
+        ]
+
+        return {
+            "method": result["method"],
+            "days": request.days,
+            "history_records": result["historical_records_used"],
+            "historical_records_used": result["historical_records_used"],
+            "forecast": result["forecasts"],
+            "forecasts": result["forecasts"],
+            "predictions": predictions,
+        }
+
+    except HTTPException:
+        raise
+
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                f"{error} Train the LSTM model before requesting "
+                "an LSTM forecast."
+            ),
+        ) from error
+
+    except (ValueError, RuntimeError) as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"LSTM forecast failed: {error}",
+        ) from error
+
+
+# --------------------------------------------------
+# RANDOM FOREST FORECASTING
+# New endpoint
+# --------------------------------------------------
+
+@app.post("/forecast/random-forest")
+def random_forest_forecast(request: ForecastRequest):
+    try:
+        history = get_history(request.history)
+
+        if not history:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "No historical consumption records were provided "
+                    "or retrieved from the Node.js backend."
+                ),
+            )
+
+        result = forecast_random_forest(
+            records=history,
+            days=request.days,
+        )
+
+        # Normalize forecast fields for easier frontend integration.
+        forecasts = [
+            {
+                "date": item["date"],
+                "consumption": item["predictedConsumption"],
+            }
+            for item in result["forecasts"]
+        ]
+
+        predictions = [
+            item["consumption"]
+            for item in forecasts
+        ]
+
+        return {
+            "method": result["method"],
+            "model": result["model"],
+            "days": request.days,
+            "history_records": len(history),
+            "historical_records_used": result["trainingRecords"],
+            "training_samples": result["trainingSamples"],
+            "forecast": forecasts,
+            "forecasts": forecasts,
+            "predictions": predictions,
+        }
+
+    except HTTPException:
+        raise
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Random Forest forecast failed: {error}",
+        ) from error
+
+
+# --------------------------------------------------
+# MOVING-AVERAGE BASELINE EVALUATION
+# Existing endpoint preserved
+# These metrics are NOT LSTM or Random Forest metrics.
+# --------------------------------------------------
+
+@app.post("/evaluate")
+def evaluate(request: ForecastRequest):
+    try:
+        history = get_history(request.history)
+
+        if len(history) < 3:
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "At least 3 daily historical records are required "
+                    "for baseline backtesting."
+                ),
+            )
+
+        result = evaluate_forecast(history)
+
+        result["method"] = "moving_average_backtesting"
+        result["evaluation_model"] = "moving_average_baseline"
+
+        return result
+
+    except HTTPException:
+        raise
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+    except Exception as error:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Evaluation failed: {error}",
+        ) from error

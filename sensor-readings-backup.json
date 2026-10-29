@@ -1,0 +1,3137 @@
+﻿[
+    {
+        "id":  "1793222388572-352",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:19:48.572Z"
+    },
+    {
+        "id":  "1793222376413-351",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:19:36.413Z"
+    },
+    {
+        "id":  "1793222364289-350",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:19:24.289Z"
+    },
+    {
+        "id":  "1793222352156-349",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:19:12.156Z"
+    },
+    {
+        "id":  "1793222340032-348",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:19:00.032Z"
+    },
+    {
+        "id":  "1793222327908-347",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:18:47.908Z"
+    },
+    {
+        "id":  "1793222315786-346",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:18:35.786Z"
+    },
+    {
+        "id":  "1793222303657-345",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:18:23.657Z"
+    },
+    {
+        "id":  "1793222291524-344",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:18:11.524Z"
+    },
+    {
+        "id":  "1793222279388-343",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:17:59.388Z"
+    },
+    {
+        "id":  "1793222267260-342",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:17:47.260Z"
+    },
+    {
+        "id":  "1793222255138-341",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:17:35.138Z"
+    },
+    {
+        "id":  "1793222243016-340",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:17:23.016Z"
+    },
+    {
+        "id":  "1793222230893-339",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:17:10.893Z"
+    },
+    {
+        "id":  "1793222218766-338",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:16:58.766Z"
+    },
+    {
+        "id":  "1793222206649-337",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:16:46.649Z"
+    },
+    {
+        "id":  "1793222194526-336",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:16:34.526Z"
+    },
+    {
+        "id":  "1793222182405-335",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:16:22.405Z"
+    },
+    {
+        "id":  "1793222170270-334",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:16:10.270Z"
+    },
+    {
+        "id":  "1793222158137-333",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:15:58.137Z"
+    },
+    {
+        "id":  "1793222146011-332",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:15:46.011Z"
+    },
+    {
+        "id":  "1793222133901-331",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:15:33.901Z"
+    },
+    {
+        "id":  "1793222121781-330",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:15:21.781Z"
+    },
+    {
+        "id":  "1793222109652-329",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:15:09.652Z"
+    },
+    {
+        "id":  "1793222097525-328",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:14:57.525Z"
+    },
+    {
+        "id":  "1793222085403-327",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:14:45.403Z"
+    },
+    {
+        "id":  "1793222073268-326",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:14:33.268Z"
+    },
+    {
+        "id":  "1793222061148-325",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:14:21.148Z"
+    },
+    {
+        "id":  "1793222049018-324",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:14:09.018Z"
+    },
+    {
+        "id":  "1793222036901-323",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:13:56.901Z"
+    },
+    {
+        "id":  "1793222024775-322",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:13:44.775Z"
+    },
+    {
+        "id":  "1793222012643-321",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:13:32.643Z"
+    },
+    {
+        "id":  "1793222000474-320",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:13:20.474Z"
+    },
+    {
+        "id":  "1793221976137-319",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:12:56.137Z"
+    },
+    {
+        "id":  "1793221957929-318",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:12:37.929Z"
+    },
+    {
+        "id":  "1793221945781-317",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:12:25.781Z"
+    },
+    {
+        "id":  "1793221933639-316",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:12:13.639Z"
+    },
+    {
+        "id":  "1793221921512-315",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:12:01.512Z"
+    },
+    {
+        "id":  "1793221909394-314",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:11:49.394Z"
+    },
+    {
+        "id":  "1793221897274-313",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:11:37.274Z"
+    },
+    {
+        "id":  "1793221885121-312",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:11:25.121Z"
+    },
+    {
+        "id":  "1793221872850-311",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:11:12.850Z"
+    },
+    {
+        "id":  "1793221860216-310",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:11:00.216Z"
+    },
+    {
+        "id":  "1793221848091-309",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:10:48.091Z"
+    },
+    {
+        "id":  "1793221835956-308",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:10:35.956Z"
+    },
+    {
+        "id":  "1793221823832-307",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:10:23.832Z"
+    },
+    {
+        "id":  "1793221811707-306",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:10:11.707Z"
+    },
+    {
+        "id":  "1793221799522-305",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:09:59.522Z"
+    },
+    {
+        "id":  "1793221787394-304",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:09:47.394Z"
+    },
+    {
+        "id":  "1793221775263-303",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:09:35.263Z"
+    },
+    {
+        "id":  "1793221763143-302",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:09:23.143Z"
+    },
+    {
+        "id":  "1793221751023-301",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:09:11.023Z"
+    },
+    {
+        "id":  "1793221738894-300",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:08:58.894Z"
+    },
+    {
+        "id":  "1793221726763-299",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:08:46.763Z"
+    },
+    {
+        "id":  "1793221714649-298",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:08:34.649Z"
+    },
+    {
+        "id":  "1793221702533-297",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:08:22.533Z"
+    },
+    {
+        "id":  "1793221690379-296",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:08:10.379Z"
+    },
+    {
+        "id":  "1793221678241-295",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:07:58.241Z"
+    },
+    {
+        "id":  "1793221666095-294",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:07:46.095Z"
+    },
+    {
+        "id":  "1793221653974-293",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:07:33.974Z"
+    },
+    {
+        "id":  "1793221641838-292",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:07:21.838Z"
+    },
+    {
+        "id":  "1793221629710-291",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:07:09.710Z"
+    },
+    {
+        "id":  "1793221617592-290",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:06:57.592Z"
+    },
+    {
+        "id":  "1793221605459-289",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:06:45.459Z"
+    },
+    {
+        "id":  "1793221593329-288",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:06:33.329Z"
+    },
+    {
+        "id":  "1793221581186-287",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:06:21.186Z"
+    },
+    {
+        "id":  "1793221569061-286",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:06:09.061Z"
+    },
+    {
+        "id":  "1793221556925-285",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.002222,
+        "flowRate":  0.010997,
+        "intervalLiters":  0.002222,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:05:56.925Z"
+    },
+    {
+        "id":  "1793221544789-284",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:05:44.789Z"
+    },
+    {
+        "id":  "1793221532667-283",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:05:32.667Z"
+    },
+    {
+        "id":  "1793221520529-282",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:05:20.529Z"
+    },
+    {
+        "id":  "1793221508391-281",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:05:08.391Z"
+    },
+    {
+        "id":  "1793221496266-280",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:04:56.266Z"
+    },
+    {
+        "id":  "1793221484134-279",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:04:44.134Z"
+    },
+    {
+        "id":  "1793221471941-278",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:04:31.941Z"
+    },
+    {
+        "id":  "1793221459827-277",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:04:19.827Z"
+    },
+    {
+        "id":  "1793221447275-276",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:04:07.275Z"
+    },
+    {
+        "id":  "1793221435151-275",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:03:55.151Z"
+    },
+    {
+        "id":  "1793221423017-274",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:03:43.017Z"
+    },
+    {
+        "id":  "1793221410898-273",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:03:30.898Z"
+    },
+    {
+        "id":  "1793221398776-272",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:03:18.776Z"
+    },
+    {
+        "id":  "1793221386662-271",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:03:06.662Z"
+    },
+    {
+        "id":  "1793221374536-270",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:02:54.536Z"
+    },
+    {
+        "id":  "1793221362417-269",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:02:42.417Z"
+    },
+    {
+        "id":  "1793221350273-268",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:02:30.273Z"
+    },
+    {
+        "id":  "1793221338137-267",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:02:18.137Z"
+    },
+    {
+        "id":  "1793221326018-266",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:02:06.018Z"
+    },
+    {
+        "id":  "1793221313892-265",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:01:53.892Z"
+    },
+    {
+        "id":  "1793221301774-264",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:01:41.774Z"
+    },
+    {
+        "id":  "1793221289652-263",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:01:29.652Z"
+    },
+    {
+        "id":  "1793221277526-262",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:01:17.526Z"
+    },
+    {
+        "id":  "1793221265390-261",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:01:05.390Z"
+    },
+    {
+        "id":  "1793221253242-260",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:00:53.242Z"
+    },
+    {
+        "id":  "1793221241105-259",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:00:41.105Z"
+    },
+    {
+        "id":  "1793221228988-258",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:00:28.988Z"
+    },
+    {
+        "id":  "1793221216847-257",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:00:16.847Z"
+    },
+    {
+        "id":  "1793221204720-256",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T21:00:04.720Z"
+    },
+    {
+        "id":  "1793221192602-255",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:59:52.602Z"
+    },
+    {
+        "id":  "1793221180452-254",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:59:40.452Z"
+    },
+    {
+        "id":  "1793221168222-253",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:59:28.222Z"
+    },
+    {
+        "id":  "1793221156105-252",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:59:16.105Z"
+    },
+    {
+        "id":  "1793221143993-251",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:59:03.993Z"
+    },
+    {
+        "id":  "1793221131874-250",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:58:51.874Z"
+    },
+    {
+        "id":  "1793221119748-249",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:58:39.748Z"
+    },
+    {
+        "id":  "1793221107619-248",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:58:27.619Z"
+    },
+    {
+        "id":  "1793221095498-247",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:58:15.498Z"
+    },
+    {
+        "id":  "1793221083380-246",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:58:03.380Z"
+    },
+    {
+        "id":  "1793221071255-245",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:57:51.255Z"
+    },
+    {
+        "id":  "1793221059137-244",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:57:39.137Z"
+    },
+    {
+        "id":  "1793221047008-243",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:57:27.008Z"
+    },
+    {
+        "id":  "1793221034882-242",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:57:14.882Z"
+    },
+    {
+        "id":  "1793221022749-241",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:57:02.749Z"
+    },
+    {
+        "id":  "1793221010623-240",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:56:50.623Z"
+    },
+    {
+        "id":  "1793220998491-239",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:56:38.491Z"
+    },
+    {
+        "id":  "1793220986368-238",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:56:26.368Z"
+    },
+    {
+        "id":  "1793220974227-237",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:56:14.227Z"
+    },
+    {
+        "id":  "1793220962088-236",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:56:02.088Z"
+    },
+    {
+        "id":  "1793220949950-235",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:55:49.950Z"
+    },
+    {
+        "id":  "1793220937827-234",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:55:37.827Z"
+    },
+    {
+        "id":  "1793220925654-233",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:55:25.654Z"
+    },
+    {
+        "id":  "1793220913522-232",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:55:13.522Z"
+    },
+    {
+        "id":  "1793220901397-231",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:55:01.397Z"
+    },
+    {
+        "id":  "1793220889253-230",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:54:49.253Z"
+    },
+    {
+        "id":  "1793220877127-229",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:54:37.127Z"
+    },
+    {
+        "id":  "1793220864995-228",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:54:24.995Z"
+    },
+    {
+        "id":  "1793220852871-227",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:54:12.871Z"
+    },
+    {
+        "id":  "1793220840732-226",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:54:00.732Z"
+    },
+    {
+        "id":  "1793220828611-225",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:53:48.611Z"
+    },
+    {
+        "id":  "1793220816457-224",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:53:36.457Z"
+    },
+    {
+        "id":  "1793220804324-223",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:53:24.324Z"
+    },
+    {
+        "id":  "1793220792186-222",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:53:12.186Z"
+    },
+    {
+        "id":  "1793220780070-221",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:53:00.070Z"
+    },
+    {
+        "id":  "1793220767927-220",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:52:47.927Z"
+    },
+    {
+        "id":  "1793220755808-219",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:52:35.808Z"
+    },
+    {
+        "id":  "1793220743698-218",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:52:23.698Z"
+    },
+    {
+        "id":  "1793220731572-217",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:52:11.572Z"
+    },
+    {
+        "id":  "1793220719451-216",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:51:59.451Z"
+    },
+    {
+        "id":  "1793220707306-215",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:51:47.306Z"
+    },
+    {
+        "id":  "1793220695175-214",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:51:35.175Z"
+    },
+    {
+        "id":  "1793220683004-213",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:51:23.004Z"
+    },
+    {
+        "id":  "1793220670858-212",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:51:10.858Z"
+    },
+    {
+        "id":  "1793220658711-211",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:50:58.711Z"
+    },
+    {
+        "id":  "1793220646599-210",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:50:46.599Z"
+    },
+    {
+        "id":  "1793220634462-209",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:50:34.462Z"
+    },
+    {
+        "id":  "1793220622337-208",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:50:22.337Z"
+    },
+    {
+        "id":  "1793220610212-207",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:50:10.212Z"
+    },
+    {
+        "id":  "1793220598100-206",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:49:58.100Z"
+    },
+    {
+        "id":  "1793220585961-205",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:49:45.961Z"
+    },
+    {
+        "id":  "1793220573835-204",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:49:33.835Z"
+    },
+    {
+        "id":  "1793220561707-203",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:49:21.707Z"
+    },
+    {
+        "id":  "1793220549568-202",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:49:09.568Z"
+    },
+    {
+        "id":  "1793220537428-201",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:48:57.428Z"
+    },
+    {
+        "id":  "1793220525293-200",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:48:45.293Z"
+    },
+    {
+        "id":  "1793220513159-199",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:48:33.159Z"
+    },
+    {
+        "id":  "1793220501032-198",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:48:21.032Z"
+    },
+    {
+        "id":  "1793220488900-197",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:48:08.900Z"
+    },
+    {
+        "id":  "1793220476761-196",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:47:56.761Z"
+    },
+    {
+        "id":  "1793220464627-195",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:47:44.627Z"
+    },
+    {
+        "id":  "1793220452499-194",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:47:32.499Z"
+    },
+    {
+        "id":  "1793220440372-193",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:47:20.372Z"
+    },
+    {
+        "id":  "1793220428255-192",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:47:08.255Z"
+    },
+    {
+        "id":  "1793220416096-191",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:46:56.096Z"
+    },
+    {
+        "id":  "1793220403981-190",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:46:43.981Z"
+    },
+    {
+        "id":  "1793220391849-189",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:46:31.849Z"
+    },
+    {
+        "id":  "1793220379721-188",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:46:19.721Z"
+    },
+    {
+        "id":  "1793220367594-187",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:46:07.594Z"
+    },
+    {
+        "id":  "1793220355454-186",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:45:55.454Z"
+    },
+    {
+        "id":  "1793220343189-185",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:45:43.189Z"
+    },
+    {
+        "id":  "1793220331069-184",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:45:31.069Z"
+    },
+    {
+        "id":  "1793220318940-183",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:45:18.940Z"
+    },
+    {
+        "id":  "1793220306776-182",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:45:06.776Z"
+    },
+    {
+        "id":  "1793220294646-181",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:44:54.646Z"
+    },
+    {
+        "id":  "1793220282415-180",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:44:42.415Z"
+    },
+    {
+        "id":  "1793220270288-179",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:44:30.288Z"
+    },
+    {
+        "id":  "1793220258050-178",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:44:18.050Z"
+    },
+    {
+        "id":  "1793220245856-177",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:44:05.856Z"
+    },
+    {
+        "id":  "1793220233733-176",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:43:53.733Z"
+    },
+    {
+        "id":  "1793220221565-175",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:43:41.565Z"
+    },
+    {
+        "id":  "1793220209429-174",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:43:29.429Z"
+    },
+    {
+        "id":  "1793220197317-173",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:43:17.317Z"
+    },
+    {
+        "id":  "1793220185193-172",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:43:05.193Z"
+    },
+    {
+        "id":  "1793220173054-171",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:42:53.054Z"
+    },
+    {
+        "id":  "1793220160927-170",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:42:40.927Z"
+    },
+    {
+        "id":  "1793220148804-169",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:42:28.804Z"
+    },
+    {
+        "id":  "1793220136677-168",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:42:16.677Z"
+    },
+    {
+        "id":  "1793220124561-167",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:42:04.561Z"
+    },
+    {
+        "id":  "1793220112430-166",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:41:52.430Z"
+    },
+    {
+        "id":  "1793220100318-165",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:41:40.318Z"
+    },
+    {
+        "id":  "1793220088184-164",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:41:28.184Z"
+    },
+    {
+        "id":  "1793220076057-163",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:41:16.057Z"
+    },
+    {
+        "id":  "1793220063924-162",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:41:03.924Z"
+    },
+    {
+        "id":  "1793220051790-161",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:40:51.790Z"
+    },
+    {
+        "id":  "1793220039639-160",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:40:39.639Z"
+    },
+    {
+        "id":  "1793220027499-159",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:40:27.499Z"
+    },
+    {
+        "id":  "1793220015370-158",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:40:15.370Z"
+    },
+    {
+        "id":  "1793220003244-157",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:40:03.244Z"
+    },
+    {
+        "id":  "1793219991122-156",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:39:51.122Z"
+    },
+    {
+        "id":  "1793219979003-155",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:39:39.003Z"
+    },
+    {
+        "id":  "1793219966879-154",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:39:26.879Z"
+    },
+    {
+        "id":  "1793219954751-153",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:39:14.751Z"
+    },
+    {
+        "id":  "1793219942628-152",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:39:02.628Z"
+    },
+    {
+        "id":  "1793219930507-151",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:38:50.507Z"
+    },
+    {
+        "id":  "1793219918381-150",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:38:38.381Z"
+    },
+    {
+        "id":  "1793219906265-149",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:38:26.265Z"
+    },
+    {
+        "id":  "1793219894139-148",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:38:14.139Z"
+    },
+    {
+        "id":  "1793219882012-147",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:38:02.012Z"
+    },
+    {
+        "id":  "1793219869889-146",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:37:49.889Z"
+    },
+    {
+        "id":  "1793219857759-145",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:37:37.759Z"
+    },
+    {
+        "id":  "1793219845629-144",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:37:25.629Z"
+    },
+    {
+        "id":  "1793219833501-143",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:37:13.501Z"
+    },
+    {
+        "id":  "1793219821372-142",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:37:01.372Z"
+    },
+    {
+        "id":  "1793219809141-141",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:36:49.141Z"
+    },
+    {
+        "id":  "1793219797014-140",
+        "deviceId":  "ESP32-001",
+        "consumption":  2.022222,
+        "flowRate":  9.993686,
+        "intervalLiters":  2.022222,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:36:37.014Z"
+    },
+    {
+        "id":  "1793219784879-139",
+        "deviceId":  "ESP32-001",
+        "consumption":  16.63778,
+        "flowRate":  14.06619,
+        "intervalLiters":  3.437778,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:36:24.879Z"
+    },
+    {
+        "id":  "1793219772745-138",
+        "deviceId":  "ESP32-001",
+        "consumption":  13.2,
+        "flowRate":  9.708738,
+        "intervalLiters":  1.966667,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:36:12.745Z"
+    },
+    {
+        "id":  "1793219758057-137",
+        "deviceId":  "ESP32-001",
+        "consumption":  11.23333,
+        "flowRate":  9.43982,
+        "intervalLiters":  1.908889,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:35:58.057Z"
+    },
+    {
+        "id":  "1793219745922-136",
+        "deviceId":  "ESP32-001",
+        "consumption":  9.324444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:35:45.922Z"
+    },
+    {
+        "id":  "1793219736165-135",
+        "deviceId":  "ESP32-001",
+        "consumption":  9.324444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:35:36.165Z"
+    },
+    {
+        "id":  "1793219716740-134",
+        "deviceId":  "ESP32-001",
+        "consumption":  9.324444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:35:16.740Z"
+    },
+    {
+        "id":  "1793219704608-133",
+        "deviceId":  "ESP32-001",
+        "consumption":  9.324444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:35:04.608Z"
+    },
+    {
+        "id":  "1793219692483-132",
+        "deviceId":  "ESP32-001",
+        "consumption":  9.324444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:34:52.483Z"
+    },
+    {
+        "id":  "1793219668536-131",
+        "deviceId":  "ESP32-001",
+        "consumption":  9.324444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:34:28.536Z"
+    },
+    {
+        "id":  "1793219656409-130",
+        "deviceId":  "ESP32-001",
+        "consumption":  9.324444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:34:16.409Z"
+    },
+    {
+        "id":  "1793219644264-129",
+        "deviceId":  "ESP32-001",
+        "consumption":  9.324444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:34:04.264Z"
+    },
+    {
+        "id":  "1793219631999-128",
+        "deviceId":  "ESP32-001",
+        "consumption":  9.324444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T20:33:51.999Z"
+    },
+    {
+        "id":  "1793209443490-127",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:44:03.490Z"
+    },
+    {
+        "id":  "1793209431255-126",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:43:51.255Z"
+    },
+    {
+        "id":  "1793209419107-125",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:43:39.107Z"
+    },
+    {
+        "id":  "1793209404784-124",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:43:24.784Z"
+    },
+    {
+        "id":  "1793209392650-123",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:43:12.650Z"
+    },
+    {
+        "id":  "1793209380529-122",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:43:00.529Z"
+    },
+    {
+        "id":  "1793209368408-121",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:42:48.408Z"
+    },
+    {
+        "id":  "1793209183526-120",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:39:43.526Z"
+    },
+    {
+        "id":  "1793209171412-119",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:39:31.412Z"
+    },
+    {
+        "id":  "1793209159260-118",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:39:19.260Z"
+    },
+    {
+        "id":  "1793209147146-117",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:39:07.146Z"
+    },
+    {
+        "id":  "1793209135031-116",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:38:55.031Z"
+    },
+    {
+        "id":  "1793209104097-115",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:38:24.097Z"
+    },
+    {
+        "id":  "1793209091983-114",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:38:11.983Z"
+    },
+    {
+        "id":  "1793209079873-113",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:37:59.873Z"
+    },
+    {
+        "id":  "1793209067666-112",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:37:47.666Z"
+    },
+    {
+        "id":  "1793209055539-111",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:37:35.539Z"
+    },
+    {
+        "id":  "1793209043419-110",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:37:23.419Z"
+    },
+    {
+        "id":  "1793209031233-109",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:37:11.233Z"
+    },
+    {
+        "id":  "1793209019118-108",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:36:59.118Z"
+    },
+    {
+        "id":  "1793209006993-107",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.47111,
+        "flowRate":  0.66667,
+        "intervalLiters":  0.01111,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:36:46.993Z"
+    },
+    {
+        "id":  "1793208994877-106",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:36:34.877Z"
+    },
+    {
+        "id":  "1793208982644-105",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:36:22.644Z"
+    },
+    {
+        "id":  "1793208970531-104",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:36:10.531Z"
+    },
+    {
+        "id":  "1793208958404-103",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:35:58.404Z"
+    },
+    {
+        "id":  "1793208946268-102",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:35:46.268Z"
+    },
+    {
+        "id":  "1793208934156-101",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:35:34.156Z"
+    },
+    {
+        "id":  "1793208921754-100",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:35:21.754Z"
+    },
+    {
+        "id":  "1793208909633-99",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:35:09.633Z"
+    },
+    {
+        "id":  "1793208897500-98",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:34:57.500Z"
+    },
+    {
+        "id":  "1793208882588-97",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:34:42.588Z"
+    },
+    {
+        "id":  "1793208870464-96",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:34:30.464Z"
+    },
+    {
+        "id":  "1793208858155-95",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:34:18.155Z"
+    },
+    {
+        "id":  "1793208846035-94",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:34:06.035Z"
+    },
+    {
+        "id":  "1793208833904-93",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:33:53.904Z"
+    },
+    {
+        "id":  "1793208821677-92",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:33:41.677Z"
+    },
+    {
+        "id":  "1793208809431-91",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:33:29.431Z"
+    },
+    {
+        "id":  "1793208797303-90",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:33:17.303Z"
+    },
+    {
+        "id":  "1793208785166-89",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:33:05.166Z"
+    },
+    {
+        "id":  "1793208772939-88",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.46,
+        "flowRate":  0.93333,
+        "intervalLiters":  0.01556,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:32:52.939Z"
+    },
+    {
+        "id":  "1793208760790-87",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.44444,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:32:40.790Z"
+    },
+    {
+        "id":  "1793208748643-86",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.44444,
+        "flowRate":  23.86667,
+        "intervalLiters":  0.39778,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:32:28.643Z"
+    },
+    {
+        "id":  "1793208736529-85",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.04667,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:32:16.529Z"
+    },
+    {
+        "id":  "1793208724409-84",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.04667,
+        "flowRate":  0.26667,
+        "intervalLiters":  0.00444,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:32:04.409Z"
+    },
+    {
+        "id":  "1793208712287-83",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.04222,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:31:52.287Z"
+    },
+    {
+        "id":  "1793208700174-82",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.04222,
+        "flowRate":  2.53333,
+        "intervalLiters":  0.04222,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:31:40.174Z"
+    },
+    {
+        "id":  "1793208688046-81",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:31:28.046Z"
+    },
+    {
+        "id":  "1793208675929-80",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:31:15.929Z"
+    },
+    {
+        "id":  "1793208663817-79",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:31:03.817Z"
+    },
+    {
+        "id":  "1793208651592-78",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:30:51.592Z"
+    },
+    {
+        "id":  "1793208639458-77",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:30:39.458Z"
+    },
+    {
+        "id":  "1793208627307-76",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:30:27.307Z"
+    },
+    {
+        "id":  "1793208570434-75",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:29:30.434Z"
+    },
+    {
+        "id":  "1793208484929-74",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:28:04.929Z"
+    },
+    {
+        "id":  "1793208472746-73",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:27:52.746Z"
+    },
+    {
+        "id":  "1793208460556-72",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:27:40.556Z"
+    },
+    {
+        "id":  "1793208448422-71",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:27:28.422Z"
+    },
+    {
+        "id":  "1793208436278-70",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:27:16.278Z"
+    },
+    {
+        "id":  "1793208424160-69",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:27:04.160Z"
+    },
+    {
+        "id":  "1793208368204-68",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.92889,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:26:08.204Z"
+    },
+    {
+        "id":  "1793208356080-67",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.92889,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:25:56.080Z"
+    },
+    {
+        "id":  "1793208343961-66",
+        "deviceId":  "ESP32-001",
+        "consumption":  0.92889,
+        "flowRate":  55.73333,
+        "intervalLiters":  0.92889,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:25:43.961Z"
+    },
+    {
+        "id":  "1793208331840-65",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:25:31.840Z"
+    },
+    {
+        "id":  "1793208319656-64",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:25:19.656Z"
+    },
+    {
+        "id":  "1793208307466-63",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:25:07.466Z"
+    },
+    {
+        "id":  "1793208288115-62",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:24:48.115Z"
+    },
+    {
+        "id":  "1793208277993-61",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:24:37.993Z"
+    },
+    {
+        "id":  "1793208268001-60",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:24:28.001Z"
+    },
+    {
+        "id":  "1793208257988-59",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:24:17.988Z"
+    },
+    {
+        "id":  "1793208250330-58",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:24:10.330Z"
+    },
+    {
+        "id":  "1793208237998-57",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:23:57.998Z"
+    },
+    {
+        "id":  "1793208227995-56",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:23:47.995Z"
+    },
+    {
+        "id":  "1793208217995-55",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:23:37.995Z"
+    },
+    {
+        "id":  "1793208208002-54",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:23:28.002Z"
+    },
+    {
+        "id":  "1793208198106-53",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:23:18.106Z"
+    },
+    {
+        "id":  "1793208190327-52",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:23:10.327Z"
+    },
+    {
+        "id":  "1793208178039-51",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:22:58.039Z"
+    },
+    {
+        "id":  "1793208168103-50",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:22:48.103Z"
+    },
+    {
+        "id":  "1793208158088-49",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:22:38.088Z"
+    },
+    {
+        "id":  "1793208147986-48",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:22:27.986Z"
+    },
+    {
+        "id":  "1793208138001-47",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:22:18.001Z"
+    },
+    {
+        "id":  "1793208128008-46",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:22:08.008Z"
+    },
+    {
+        "id":  "1793208118031-45",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:21:58.031Z"
+    },
+    {
+        "id":  "1793208107999-44",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:21:47.999Z"
+    },
+    {
+        "id":  "1793208097986-43",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:21:37.986Z"
+    },
+    {
+        "id":  "1793208088038-42",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:21:28.038Z"
+    },
+    {
+        "id":  "1793208077982-41",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:21:17.982Z"
+    },
+    {
+        "id":  "1793208067980-40",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:21:07.980Z"
+    },
+    {
+        "id":  "1793208058024-39",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:20:58.024Z"
+    },
+    {
+        "id":  "1793208047987-38",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:20:47.987Z"
+    },
+    {
+        "id":  "1793208038059-37",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:20:38.059Z"
+    },
+    {
+        "id":  "1793208027984-36",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:20:27.984Z"
+    },
+    {
+        "id":  "1793208017991-35",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:20:17.991Z"
+    },
+    {
+        "id":  "1793208007983-34",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:20:07.983Z"
+    },
+    {
+        "id":  "1793207997972-33",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:19:57.972Z"
+    },
+    {
+        "id":  "1793207987966-32",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:19:47.966Z"
+    },
+    {
+        "id":  "1793207978050-31",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:19:38.050Z"
+    },
+    {
+        "id":  "1793207968015-30",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:19:28.015Z"
+    },
+    {
+        "id":  "1793207957976-29",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:19:17.976Z"
+    },
+    {
+        "id":  "1793207947973-28",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:19:07.973Z"
+    },
+    {
+        "id":  "1793207938014-27",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:18:58.014Z"
+    },
+    {
+        "id":  "1793207927982-26",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:18:47.982Z"
+    },
+    {
+        "id":  "1793207918044-25",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:18:38.044Z"
+    },
+    {
+        "id":  "1793207907978-24",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:18:27.978Z"
+    },
+    {
+        "id":  "1793207897978-23",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:18:17.978Z"
+    },
+    {
+        "id":  "1793207887993-22",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:18:07.993Z"
+    },
+    {
+        "id":  "1793207880756-21",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "flowRate":  0,
+        "intervalLiters":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:18:00.756Z"
+    },
+    {
+        "id":  "1793207867970-20",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:17:47.970Z"
+    },
+    {
+        "id":  "1793207857971-19",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:17:37.971Z"
+    },
+    {
+        "id":  "1793207847966-18",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:17:27.966Z"
+    },
+    {
+        "id":  "1793207838070-17",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:17:18.070Z"
+    },
+    {
+        "id":  "1793207827964-16",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:17:07.964Z"
+    },
+    {
+        "id":  "1793207817978-15",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:16:57.978Z"
+    },
+    {
+        "id":  "1793207807960-14",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:16:47.960Z"
+    },
+    {
+        "id":  "1793207797957-13",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:16:37.957Z"
+    },
+    {
+        "id":  "1793207787974-12",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:16:27.974Z"
+    },
+    {
+        "id":  "1793207778065-11",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:16:18.065Z"
+    },
+    {
+        "id":  "1793207767958-10",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:16:07.958Z"
+    },
+    {
+        "id":  "1793207757962-9",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:15:57.962Z"
+    },
+    {
+        "id":  "1793207747976-8",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:15:47.976Z"
+    },
+    {
+        "id":  "1793207738025-7",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:15:38.025Z"
+    },
+    {
+        "id":  "1793207727948-6",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:15:27.948Z"
+    },
+    {
+        "id":  "1793207717954-5",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:15:17.954Z"
+    },
+    {
+        "id":  "1793207707969-4",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:15:07.969Z"
+    },
+    {
+        "id":  "1793207697965-3",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:14:57.965Z"
+    },
+    {
+        "id":  "1793207688053-2",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:14:48.053Z"
+    },
+    {
+        "id":  "1793207677968-1",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:14:37.968Z"
+    },
+    {
+        "id":  "1793207667946-0",
+        "deviceId":  "ESP32-001",
+        "consumption":  0,
+        "date":  "2026-10-29",
+        "timestamp":  "2026-10-28T17:14:27.946Z"
+    }
+]

@@ -1,437 +1,838 @@
-
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
 #include <HTTPClient.h>
+#include <WiFiClient.h>
 #include <Preferences.h>
 #include <Wire.h>
 #include <SPI.h>
 #include <SD.h>
+#include <math.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <ArduinoJson.h>
 
 // =====================================================
-// 1. HOME WI-FI
-// Replace these with your actual home Wi-Fi details.
-// Use a 2.4 GHz Wi-Fi network.
+// WIFI CONFIGURATION
 // =====================================================
+
 const char* HOME_WIFI_SSID = "2.4G_SalgadoFamily";
 const char* HOME_WIFI_PASSWORD = "Lydict5121";
 
-// =====================================================
-// 2. ESP32 BACKUP HOTSPOT
-// Connect your phone/laptop to this if router Wi-Fi
-// is unavailable.
-// =====================================================
-const char* LOCAL_AP_NAME = "WATER-SENSOR-LOCAL";
-const char* LOCAL_AP_PASSWORD = "ChangeMe456";
+const char* LOCAL_AP_NAME = "WaterMonitor-ESP32";
+const char* LOCAL_AP_PASSWORD = "ChangeThis123";
 
-// Hotspot dashboard address: http://192.168.4.1
-
-// =====================================================
-// 3. BACKEND SERVER
-// Change this if your backend computer uses another IP.
-// =====================================================
 const char* SERVER_URL =
-    "http://192.168.0.107:4000/api/sensor/reading";
+    "http://192.168.0.100:4000/api/sensor/reading";
 
 const char* DEVICE_ID = "ESP32-001";
 
 // =====================================================
-// 4. YF-S201 FLOW SENSOR
-// 450 pulses/L is a starting value; calibrate it.
+// WATER FLOW SENSOR
 // =====================================================
+
 const int FLOW_SENSOR_PIN = 27;
 const float PULSES_PER_LITER = 450.0f;
 
+#define SENSOR_INTERRUPT_EDGE RISING
+
 // =====================================================
-// 5. OLED
+// OLED CONFIGURATION
 // =====================================================
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET -1
+#define OLED_ADDRESS 0x3C
+
 const int OLED_SDA_PIN = 21;
 const int OLED_SCL_PIN = 22;
-const int OLED_ADDRESS = 0x3C;
 
-Adafruit_SSD1306 display(128, 64, &Wire, -1);
-bool oledReady = false;
+Adafruit_SSD1306 display(
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    &Wire,
+    OLED_RESET
+);
 
 // =====================================================
-// 6. MICROSD
+// SD CARD CONFIGURATION
 // =====================================================
+
 const int SD_CS_PIN = 5;
 const int SD_SCK_PIN = 18;
 const int SD_MISO_PIN = 19;
 const int SD_MOSI_PIN = 23;
 
-bool sdReady = false;
-const char* CSV_FILE = "/water_log.csv";
+const char* LOG_FILE = "/water_log.csv";
+const char* QUEUE_FILE = "/pending.jsonl";
+const char* TEMP_FILE = "/pending.tmp";
+const char* BACKUP_FILE = "/pending.bak";
 
 // =====================================================
-// 7. LOCAL PERSISTENT STORAGE
+// TIMING
 // =====================================================
-Preferences preferences;
-const char* PREF_NAMESPACE = "waterMeter";
-const char* PREF_TOTAL_KEY = "totalLiters";
+
+const unsigned long MEASURE_INTERVAL_MS = 1000;
+const unsigned long QUEUE_INTERVAL_MS = 10000;
+const unsigned long SAVE_TOTAL_INTERVAL_MS = 10000;
+const unsigned long WIFI_RETRY_INTERVAL_MS = 15000;
+const unsigned long UPLOAD_RETRY_INTERVAL_MS = 3000;
+const unsigned long OLED_INTERVAL_MS = 1000;
+const unsigned long HTTP_TIMEOUT_MS = 5000;
 
 // =====================================================
-// 8. WEB SERVER AND CONNECTION STATE
+// GLOBAL VARIABLES
 // =====================================================
+
 WebServer server(80);
+Preferences preferences;
 
-bool webServerStarted = false;
-bool localAPStarted = false;
-
-// =====================================================
-// 9. TIMERS
-// =====================================================
-const unsigned long MEASUREMENT_INTERVAL = 1000;
-const unsigned long SAVE_INTERVAL = 60000;
-const unsigned long SD_LOG_INTERVAL = 60000;
-const unsigned long BACKEND_INTERVAL = 10000;
-const unsigned long WIFI_RETRY_INTERVAL = 15000;
-const unsigned long OLED_INTERVAL = 1000;
-
-unsigned long previousMeasurementMillis = 0;
-unsigned long previousSaveMillis = 0;
-unsigned long previousSDMillis = 0;
-unsigned long previousBackendMillis = 0;
-unsigned long previousWiFiRetryMillis = 0;
-unsigned long previousOLEDMillis = 0;
-
-// =====================================================
-// 10. MEASUREMENT DATA
-// =====================================================
-volatile uint32_t pulseCount = 0;
 portMUX_TYPE pulseMux = portMUX_INITIALIZER_UNLOCKED;
 
-float flowRate = 0.0f;
+volatile unsigned long pulseCount = 0;
+
+float flowRateLMin = 0.0f;
+float intervalLiters = 0.0f;
 float totalLiters = 0.0f;
-float lastIntervalLiters = 0.0f;
+float reportingWindowLiters = 0.0f;
+
+unsigned long reportingWindowStartMs = 0;
+
+unsigned long lastMeasureMs = 0;
+unsigned long lastQueueMs = 0;
+unsigned long lastSaveMs = 0;
+unsigned long lastWiFiRetryMs = 0;
+unsigned long lastUploadAttemptMs = 0;
+unsigned long lastOLEDUpdateMs = 0;
+
+unsigned long readingSequence = 0;
+
+bool oledReady = false;
+bool sdReady = false;
+bool hotspotStarted = false;
+bool webServerStarted = false;
+bool homeWiFiConnected = false;
+
+String lastUploadStatus = "Not attempted";
+
+// Forward declaration
+bool postJsonLine(const String& jsonLine);
 
 // =====================================================
-// FLOW SENSOR INTERRUPT
+// SENSOR INTERRUPT
 // =====================================================
-void IRAM_ATTR flowPulseISR() {
+
+void IRAM_ATTR onFlowPulse() {
     portENTER_CRITICAL_ISR(&pulseMux);
     pulseCount++;
     portEXIT_CRITICAL_ISR(&pulseMux);
 }
 
 // =====================================================
-// SAVE TOTAL TO ESP32 FLASH
+// SAVE AND RESTORE TOTAL CONSUMPTION
 // =====================================================
-void saveTotalConsumption() {
-    preferences.putFloat(PREF_TOTAL_KEY, totalLiters);
 
-    Serial.print("Saved total: ");
-    Serial.print(totalLiters, 3);
-    Serial.println(" L");
+void saveTotalLiters() {
+    preferences.putFloat("totalLiters", totalLiters);
 }
 
-// =====================================================
-// RESTORE PREVIOUS TOTAL
-// =====================================================
-void restoreTotalConsumption() {
-    totalLiters = preferences.getFloat(PREF_TOTAL_KEY, 0.0f);
-
-    Serial.print("Restored total: ");
-    Serial.print(totalLiters, 3);
-    Serial.println(" L");
-}
-
-// =====================================================
-// OLED UPDATE
-// =====================================================
-void updateOLED() {
-    if (!oledReady) return;
-
-    display.clearDisplay();
-    display.setTextColor(SSD1306_WHITE);
-    display.setTextSize(1);
-    display.setCursor(0, 0);
-
-    display.println("WATER MONITOR");
-    display.println("----------------");
-
-    display.print("Flow: ");
-    display.print(flowRate, 2);
-    display.println(" L/min");
-
-    display.print("Total: ");
-    display.print(totalLiters, 3);
-    display.println(" L");
-
-    display.print("WiFi: ");
-    display.println(
-        WiFi.status() == WL_CONNECTED ? "Connected" : "Offline"
+void restoreTotalLiters() {
+    totalLiters = preferences.getFloat(
+        "totalLiters",
+        0.0f
     );
 
-    display.print("Hotspot: ");
-    display.println(localAPStarted ? "Active" : "Off");
+    readingSequence = preferences.getULong(
+        "readingSeq",
+        0
+    );
 
-    display.print("SD: ");
-    display.println(sdReady ? "Ready" : "Unavailable");
+    if (!isfinite(totalLiters) || totalLiters < 0.0f) {
+        totalLiters = 0.0f;
+    }
 
-    display.display();
+    Serial.print("Restored total consumption: ");
+    Serial.print(totalLiters, 3);
+    Serial.println(" L");
+}
+
+String makeReadingId() {
+    readingSequence++;
+
+    preferences.putULong(
+        "readingSeq",
+        readingSequence
+    );
+
+    return String(DEVICE_ID) + "-" + String(readingSequence);
 }
 
 // =====================================================
-// INITIALIZE OLED
+// OLED INITIALIZATION
 // =====================================================
+
 void initializeOLED() {
-    Serial.println("Initializing OLED...");
+    Wire.begin(
+        OLED_SDA_PIN,
+        OLED_SCL_PIN
+    );
 
-    Wire.begin(OLED_SDA_PIN, OLED_SCL_PIN);
+    if (!display.begin(
+            SSD1306_SWITCHCAPVCC,
+            OLED_ADDRESS)) {
+        Serial.println(
+            "OLED initialization failed. Continuing without OLED."
+        );
 
-    if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS)) {
-        Serial.println("OLED initialization FAILED.");
+        oledReady = false;
         return;
     }
 
     oledReady = true;
+
     display.clearDisplay();
-    display.setTextColor(SSD1306_WHITE);
     display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
     display.setCursor(0, 0);
-    display.println("WATER MONITOR");
-    display.println("Starting...");
+
+    display.println("Water Monitor");
+    display.println("Initializing...");
+
     display.display();
 
-    Serial.println("OLED initialized successfully.");
+    Serial.println("OLED initialized.");
 }
 
 // =====================================================
-// INITIALIZE MICROSD
+// SD CARD INITIALIZATION
 // =====================================================
+
 void initializeSDCard() {
-    Serial.println("Initializing microSD...");
+    SPI.begin(
+        SD_SCK_PIN,
+        SD_MISO_PIN,
+        SD_MOSI_PIN,
+        SD_CS_PIN
+    );
 
-    SPI.begin(SD_SCK_PIN, SD_MISO_PIN, SD_MOSI_PIN, SD_CS_PIN);
+    if (!SD.begin(
+            SD_CS_PIN,
+            SPI,
+            4000000)) {
+        Serial.println(
+            "SD card initialization failed. Logging and offline queue unavailable."
+        );
 
-    if (!SD.begin(SD_CS_PIN, SPI)) {
-        Serial.println("microSD initialization FAILED.");
-        Serial.println("Continuing without microSD.");
         sdReady = false;
         return;
     }
 
     sdReady = true;
-    Serial.println("microSD initialized successfully.");
 
-    if (!SD.exists(CSV_FILE)) {
-        File file = SD.open(CSV_FILE, FILE_WRITE);
+    if (!SD.exists(LOG_FILE)) {
+        File file = SD.open(
+            LOG_FILE,
+            FILE_WRITE
+        );
 
         if (file) {
-            file.println("Uptime_ms,Flow_L_min,Interval_L,Total_L");
+            file.println(
+                "Uptime_ms,Flow_L_min,Interval_L,Total_L"
+            );
+
             file.close();
         }
     }
+
+    if (!SD.exists(QUEUE_FILE)) {
+        File file = SD.open(
+            QUEUE_FILE,
+            FILE_WRITE
+        );
+
+        if (file) {
+            file.close();
+        }
+    }
+
+    Serial.println("SD card initialized.");
 }
 
 // =====================================================
-// WRITE MEASUREMENTS TO MICROSD
+// CSV LOGGING
 // =====================================================
-void logToSD() {
-    if (!sdReady) return;
 
-    File file = SD.open(CSV_FILE, FILE_APPEND);
+void logMeasurementToCSV() {
+    if (!sdReady) {
+        return;
+    }
+
+    File file = SD.open(
+        LOG_FILE,
+        FILE_APPEND
+    );
 
     if (!file) {
-        Serial.println("Could not open microSD log file.");
+        Serial.println(
+            "Unable to open CSV log file."
+        );
+
         return;
     }
 
     file.print(millis());
     file.print(",");
-    file.print(flowRate, 4);
+    file.print(flowRateLMin, 4);
     file.print(",");
-    file.print(lastIntervalLiters, 5);
+    file.print(intervalLiters, 6);
     file.print(",");
-    file.println(totalLiters, 5);
-    file.close();
+    file.println(totalLiters, 6);
 
-    Serial.println("Measurement logged to microSD.");
+    file.close();
 }
 
 // =====================================================
-// DASHBOARD PAGE
+// COUNT PENDING QUEUE RECORDS
 // =====================================================
-void handleDashboard() {
-    String html = R"HTML(
+
+unsigned long pendingQueueCount() {
+    if (!sdReady || !SD.exists(QUEUE_FILE)) {
+        return 0;
+    }
+
+    File file = SD.open(
+        QUEUE_FILE,
+        FILE_READ
+    );
+
+    if (!file) {
+        return 0;
+    }
+
+    unsigned long count = 0;
+
+    while (file.available()) {
+        String line = file.readStringUntil('\n');
+        line.trim();
+
+        if (line.length() > 0) {
+            count++;
+        }
+    }
+
+    file.close();
+
+    return count;
+}
+
+// =====================================================
+// ADD READING TO QUEUE OR UPLOAD DIRECTLY
+// =====================================================
+
+bool enqueueReading() {
+    JsonDocument document;
+
+    document["readingId"] = makeReadingId();
+    document["deviceId"] = DEVICE_ID;
+    document["consumption"] = totalLiters;
+    document["flowRate"] = flowRateLMin;
+    document["intervalLiters"] = intervalLiters;
+    document["uptimeMs"] = millis();
+
+    String jsonLine;
+
+    serializeJson(
+        document,
+        jsonLine
+    );
+
+    // Preserve the original queue behavior when SD works.
+    if (sdReady) {
+        File file = SD.open(
+            QUEUE_FILE,
+            FILE_APPEND
+        );
+
+        if (file) {
+            file.println(jsonLine);
+            file.flush();
+            file.close();
+
+            Serial.println("Reading added to offline queue:");
+            Serial.println(jsonLine);
+
+            return true;
+        }
+
+        Serial.println(
+            "Unable to open pending queue. Trying direct upload."
+        );
+    } else {
+        Serial.println(
+            "SD card unavailable. Trying direct upload."
+        );
+    }
+
+    // Without SD, send the current reading directly.
+    if (WiFi.status() == WL_CONNECTED) {
+        bool uploaded = postJsonLine(jsonLine);
+
+        if (uploaded) {
+            Serial.println("Direct upload successful.");
+            return true;
+        }
+
+        Serial.println(
+            "Direct upload failed. Reading was not saved."
+        );
+    } else {
+        lastUploadStatus = "Wi-Fi disconnected";
+
+        Serial.println(
+            "Cannot upload: home Wi-Fi is disconnected."
+        );
+    }
+
+    return false;
+}
+
+// =====================================================
+// REMOVE FIRST QUEUED READING
+// =====================================================
+
+bool removeFirstQueuedReading() {
+    if (!sdReady || !SD.exists(QUEUE_FILE)) {
+        return false;
+    }
+
+    File source = SD.open(
+        QUEUE_FILE,
+        FILE_READ
+    );
+
+    if (!source) {
+        return false;
+    }
+
+    String firstLine = source.readStringUntil('\n');
+    firstLine.trim();
+
+    if (firstLine.length() == 0) {
+        source.close();
+        return false;
+    }
+
+    SD.remove(TEMP_FILE);
+
+    File temporary = SD.open(
+        TEMP_FILE,
+        FILE_WRITE
+    );
+
+    if (!temporary) {
+        source.close();
+        return false;
+    }
+
+    while (source.available()) {
+        String line = source.readStringUntil('\n');
+        line.trim();
+
+        if (line.length() > 0) {
+            temporary.println(line);
+        }
+    }
+
+    source.close();
+    temporary.flush();
+    temporary.close();
+
+    SD.remove(BACKUP_FILE);
+
+    if (SD.exists(QUEUE_FILE)) {
+        if (!SD.rename(QUEUE_FILE, BACKUP_FILE)) {
+            SD.remove(TEMP_FILE);
+            return false;
+        }
+    }
+
+    if (!SD.rename(TEMP_FILE, QUEUE_FILE)) {
+        if (SD.exists(BACKUP_FILE)) {
+            SD.rename(BACKUP_FILE, QUEUE_FILE);
+        }
+
+        return false;
+    }
+
+    SD.remove(BACKUP_FILE);
+
+    return true;
+}
+
+// =====================================================
+// SEND READING TO BACKEND
+// =====================================================
+
+bool postJsonLine(const String& jsonLine) {
+    if (WiFi.status() != WL_CONNECTED) {
+        lastUploadStatus = "Wi-Fi disconnected";
+        return false;
+    }
+
+    WiFiClient client;
+    HTTPClient http;
+
+    http.setTimeout(HTTP_TIMEOUT_MS);
+
+    if (!http.begin(client, SERVER_URL)) {
+        lastUploadStatus = "HTTP initialization failed";
+
+        Serial.println(lastUploadStatus);
+        return false;
+    }
+
+    http.addHeader(
+        "Content-Type",
+        "application/json"
+    );
+
+    int httpCode = http.POST(
+        (uint8_t*)jsonLine.c_str(),
+        jsonLine.length()
+    );
+
+    bool success =
+        httpCode >= 200 && httpCode < 300;
+
+    if (success) {
+        lastUploadStatus = "HTTP " + String(httpCode);
+    } else {
+        lastUploadStatus = "HTTP error " + String(httpCode);
+    }
+
+    Serial.print("Upload result: ");
+    Serial.println(lastUploadStatus);
+
+    if (httpCode > 0) {
+        Serial.print("Server response: ");
+        Serial.println(http.getString());
+    }
+
+    http.end();
+
+    return success;
+}
+
+// =====================================================
+// UPLOAD PENDING READINGS
+// =====================================================
+
+void uploadPendingReadings() {
+    unsigned long now = millis();
+
+    if (now - lastUploadAttemptMs <
+        UPLOAD_RETRY_INTERVAL_MS) {
+        return;
+    }
+
+    lastUploadAttemptMs = now;
+
+    if (!sdReady ||
+        WiFi.status() != WL_CONNECTED ||
+        !SD.exists(QUEUE_FILE)) {
+        return;
+    }
+
+    File file = SD.open(
+        QUEUE_FILE,
+        FILE_READ
+    );
+
+    if (!file) {
+        return;
+    }
+
+    String firstLine = file.readStringUntil('\n');
+    file.close();
+    firstLine.trim();
+
+    if (firstLine.length() == 0) {
+        return;
+    }
+
+    if (postJsonLine(firstLine)) {
+        if (removeFirstQueuedReading()) {
+            Serial.println(
+                "Uploaded and removed queued reading."
+            );
+        } else {
+            Serial.println(
+                "Upload succeeded, but queue removal failed."
+            );
+        }
+    } else {
+        Serial.println(
+            "Upload failed. Reading remains queued."
+        );
+    }
+}
+
+// =====================================================
+// DASHBOARD
+// =====================================================
+
+const char DASHBOARD_HTML[] PROGMEM = R"HTML(
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="5">
 <title>ESP32 Water Monitor</title>
 <style>
 body {
-  font-family: Arial, sans-serif;
-  margin: 20px;
-  background: #f1f5f9;
-  color: #172033;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    margin: 0;
+    padding: 18px;
+    color: #1e293b;
 }
+.container {
+    max-width: 650px;
+    margin: auto;
+}
+h1 { text-align: center; }
 .card {
-  background: white;
-  padding: 18px;
-  margin-bottom: 15px;
-  border-radius: 10px;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
+.label { color: #64748b; font-size: 14px; }
 .value {
-  font-size: 26px;
-  font-weight: bold;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 7px;
+    overflow-wrap: anywhere;
 }
 button {
-  padding: 12px;
-  background: #b91c1c;
-  color: white;
-  border: none;
-  border-radius: 6px;
+    background: #b91c1c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
 }
 </style>
 </head>
 <body>
-<h2>Household Water Monitoring</h2>
+<div class="container">
+<h1>Household Water Monitor</h1>
 
 <div class="card">
-  <h3>Current Flow Rate</h3>
-  <div class="value" id="flow">Loading...</div>
+<div class="label">Flow Rate</div>
+<div class="value" id="flow">--</div>
 </div>
 
 <div class="card">
-  <h3>Total Consumption</h3>
-  <div class="value" id="total">Loading...</div>
+<div class="label">Last 10-Second Window</div>
+<div class="value" id="interval">--</div>
 </div>
 
 <div class="card">
-  <h3>Connection Status</h3>
-  <p id="wifi">Loading...</p>
-  <p id="hotspot">Loading...</p>
-  <p id="sd">Loading...</p>
-  <p id="ip">Loading...</p>
+<div class="label">Total Consumption</div>
+<div class="value" id="total">--</div>
 </div>
 
 <div class="card">
-  <h3>Reset Total</h3>
-  <p>Reset the accumulated total to zero.</p>
-  <button onclick="resetTotal()">Reset Total</button>
+<div class="label">Home Wi-Fi</div>
+<div class="value" id="wifi">--</div>
+</div>
+
+<div class="card">
+<div class="label">Dashboard IP</div>
+<div class="value" id="ip">--</div>
+</div>
+
+<div class="card">
+<div class="label">SD Card</div>
+<div class="value" id="sd">--</div>
+</div>
+
+<div class="card">
+<div class="label">Pending Uploads</div>
+<div class="value" id="pending">--</div>
+</div>
+
+<div class="card">
+<div class="label">Last Upload</div>
+<div class="value" id="upload">--</div>
+</div>
+
+<div class="card">
+<button onclick="resetTotal()">Reset Total Consumption</button>
+</div>
 </div>
 
 <script>
-async function refreshStatus() {
-  try {
-    const response = await fetch('/api/status');
-    const data = await response.json();
+async function updateStatus() {
+    try {
+        const response = await fetch('/api/status');
+        const data = await response.json();
 
-    document.getElementById('flow').textContent =
-      Number(data.flowRate).toFixed(2) + ' L/min';
+        document.getElementById('flow').textContent =
+            Number(data.flowRate).toFixed(3) + ' L/min';
 
-    document.getElementById('total').textContent =
-      Number(data.totalLiters).toFixed(3) + ' L';
+        document.getElementById('interval').textContent =
+            Number(data.intervalLiters).toFixed(4) + ' L';
 
-    document.getElementById('wifi').textContent =
-      'Home Wi-Fi: ' + data.wifiStatus;
+        document.getElementById('total').textContent =
+            Number(data.totalLiters).toFixed(3) + ' L';
 
-    document.getElementById('hotspot').textContent =
-      'ESP32 hotspot: ' + data.hotspotStatus;
+        document.getElementById('wifi').textContent =
+            data.wifiConnected ? 'Connected' : 'Disconnected';
 
-    document.getElementById('sd').textContent =
-      'microSD: ' + data.sdStatus;
+        document.getElementById('ip').textContent = data.ip;
 
-    document.getElementById('ip').textContent =
-      'Device IP: ' + data.ipAddress;
-  } catch (error) {
-    console.log('Unable to load status:', error);
-  }
+        document.getElementById('sd').textContent =
+            data.sdReady ? 'Available' : 'Unavailable';
+
+        document.getElementById('pending').textContent =
+            data.pending;
+
+        document.getElementById('upload').textContent =
+            data.lastUpload;
+    } catch (error) {
+        console.error('Dashboard update failed:', error);
+    }
 }
 
 async function resetTotal() {
-  if (!confirm('Reset total consumption to zero?')) return;
+    if (!confirm('Reset total water consumption to zero?')) {
+        return;
+    }
 
-  try {
-    const response = await fetch('/api/reset', { method: 'POST' });
-    const result = await response.json();
-    alert(result.message);
-    refreshStatus();
-  } catch (error) {
-    alert('Reset request failed.');
-  }
+    try {
+        const response = await fetch('/api/reset', {
+            method: 'POST'
+        });
+
+        const data = await response.json();
+        alert(data.message);
+        updateStatus();
+    } catch (error) {
+        alert('Unable to reset total consumption.');
+    }
 }
 
-refreshStatus();
+updateStatus();
+setInterval(updateStatus, 3000);
 </script>
 </body>
 </html>
 )HTML";
 
-    server.send(200, "text/html", html);
-}
+// =====================================================
+// API: STATUS
+// =====================================================
 
-// =====================================================
-// STATUS API
-// =====================================================
 void handleStatus() {
-    String wifiStatus =
-        WiFi.status() == WL_CONNECTED ? "Connected" : "Disconnected";
+    JsonDocument document;
 
-    String hotspotStatus =
-        localAPStarted ? "Active" : "Off";
+    document["deviceId"] = DEVICE_ID;
+    document["flowRate"] = flowRateLMin;
+    document["intervalLiters"] = intervalLiters;
+    document["totalLiters"] = totalLiters;
 
-    String sdStatus = sdReady ? "Ready" : "Unavailable";
+    document["wifiConnected"] =
+        WiFi.status() == WL_CONNECTED;
 
-    // Report the correct IP for the interface being used.
-    String ipAddress;
+    document["sdReady"] = sdReady;
+    document["hotspotStarted"] = hotspotStarted;
+    document["pending"] = pendingQueueCount();
+    document["lastUpload"] = lastUploadStatus;
 
     if (WiFi.status() == WL_CONNECTED) {
-        ipAddress = WiFi.localIP().toString();
-    } else if (localAPStarted) {
-        ipAddress = WiFi.softAPIP().toString();
+        document["ip"] = WiFi.localIP().toString();
+    } else if (hotspotStarted) {
+        document["ip"] = WiFi.softAPIP().toString();
     } else {
-        ipAddress = "Unavailable";
+        document["ip"] = "Unavailable";
     }
 
-    String json = "{";
-    json += "\"deviceId\":\"" + String(DEVICE_ID) + "\",";
-    json += "\"flowRate\":" + String(flowRate, 4) + ",";
-    json += "\"intervalLiters\":" + String(lastIntervalLiters, 5) + ",";
-    json += "\"totalLiters\":" + String(totalLiters, 5) + ",";
-    json += "\"wifiStatus\":\"" + wifiStatus + "\",";
-    json += "\"hotspotStatus\":\"" + hotspotStatus + "\",";
-    json += "\"sdStatus\":\"" + sdStatus + "\",";
-    json += "\"ipAddress\":\"" + ipAddress + "\"";
-    json += "}";
-
-    server.send(200, "application/json", json);
-}
-
-// =====================================================
-// MANUAL RESET API
-// =====================================================
-void handleResetTotal() {
-    totalLiters = 0.0f;
-    flowRate = 0.0f;
-    lastIntervalLiters = 0.0f;
-
-    saveTotalConsumption();
+    String response;
+    serializeJson(document, response);
 
     server.send(
         200,
         "application/json",
-        "{\"success\":true,\"message\":\"Total consumption reset to zero.\"}"
+        response
     );
-
-    updateOLED();
 }
 
 // =====================================================
-// START WEB SERVER
-// Works on home Wi-Fi or the ESP32 hotspot.
+// API: RESET TOTAL
 // =====================================================
-void startWebServer() {
-    if (webServerStarted) return;
 
-    server.on("/", HTTP_GET, handleDashboard);
-    server.on("/api/status", HTTP_GET, handleStatus);
-    server.on("/api/reset", HTTP_POST, handleResetTotal);
+void handleResetTotal() {
+    totalLiters = 0.0f;
+    reportingWindowLiters = 0.0f;
+
+    saveTotalLiters();
+
+    JsonDocument document;
+
+    document["success"] = true;
+    document["message"] =
+        "Total consumption reset to zero.";
+
+    String response;
+    serializeJson(document, response);
+
+    server.send(
+        200,
+        "application/json",
+        response
+    );
+
+    Serial.println("Total consumption reset.");
+}
+
+// =====================================================
+// WEB SERVER
+// =====================================================
+
+void startWebServer() {
+    if (webServerStarted) {
+        return;
+    }
+
+    server.on("/", HTTP_GET, []() {
+        server.send_P(
+            200,
+            "text/html",
+            DASHBOARD_HTML
+        );
+    });
+
+    server.on(
+        "/api/status",
+        HTTP_GET,
+        handleStatus
+    );
+
+    server.on(
+        "/api/reset",
+        HTTP_POST,
+        handleResetTotal
+    );
+
+    server.onNotFound([]() {
+        server.send(
+            404,
+            "text/plain",
+            "Not found"
+        );
+    });
 
     server.begin();
     webServerStarted = true;
@@ -440,294 +841,396 @@ void startWebServer() {
 }
 
 // =====================================================
-// START BACKUP HOTSPOT
+// LOCAL HOTSPOT
 // =====================================================
+
 void startLocalHotspot() {
-    if (localAPStarted) return;
+    if (hotspotStarted) {
+        return;
+    }
 
-    Serial.println();
-    Serial.println("Starting ESP32 backup hotspot...");
-
-    // AP+STA allows the hotspot and router connection
-    // to operate together when the router is available.
-    WiFi.mode(WIFI_AP_STA);
-
-    bool started = WiFi.softAP(
+    bool success = WiFi.softAP(
         LOCAL_AP_NAME,
         LOCAL_AP_PASSWORD
     );
 
-    if (started) {
-        localAPStarted = true;
+    if (success) {
+        hotspotStarted = true;
 
-        Serial.println("Backup hotspot started.");
-        Serial.print("Hotspot name: ");
+        Serial.println("Local hotspot started.");
+
+        Serial.print("Hotspot SSID: ");
         Serial.println(LOCAL_AP_NAME);
 
-        Serial.print("Hotspot password: ");
-        Serial.println(LOCAL_AP_PASSWORD);
-
-        Serial.print("Local dashboard: http://");
+        Serial.print("Dashboard URL: http://");
         Serial.println(WiFi.softAPIP());
-
-        startWebServer();
     } else {
-        Serial.println("ERROR: Could not start backup hotspot.");
+        Serial.println(
+            "ERROR: Local hotspot failed to start."
+        );
     }
+
+    startWebServer();
 }
 
 // =====================================================
-// CONNECT TO HOME WI-FI FIRST
-// If unavailable, start the backup hotspot.
+// HOME WI-FI SETUP
 // =====================================================
+
 void setupWiFi() {
-    Serial.println();
-    Serial.println("Connecting to home Wi-Fi...");
-
-    WiFi.mode(WIFI_STA);
-    WiFi.setAutoReconnect(true);
+    WiFi.mode(WIFI_AP_STA);
     WiFi.persistent(false);
+    WiFi.setAutoReconnect(true);
+    WiFi.setSleep(false);
 
-    WiFi.begin(HOME_WIFI_SSID, HOME_WIFI_PASSWORD);
+    startLocalHotspot();
 
-    unsigned long startAttempt = millis();
+    Serial.println();
+    Serial.println("Connecting to configured Wi-Fi...");
+    Serial.print("SSID: ");
+    Serial.println(HOME_WIFI_SSID);
 
-    while (WiFi.status() != WL_CONNECTED &&
-           millis() - startAttempt < 20000) {
+    WiFi.begin(
+        HOME_WIFI_SSID,
+        HOME_WIFI_PASSWORD
+    );
+
+    unsigned long startTime = millis();
+
+    while (
+        WiFi.status() != WL_CONNECTED &&
+        millis() - startTime < 20000
+    ) {
         delay(500);
         Serial.print(".");
     }
 
     Serial.println();
 
-    if (WiFi.status() == WL_CONNECTED) {
-        Serial.println("SUCCESS: Home Wi-Fi connected.");
+    homeWiFiConnected =
+        WiFi.status() == WL_CONNECTED;
 
-        Serial.print("ESP32 home-network IP: ");
+    if (homeWiFiConnected) {
+        Serial.println("HOME WI-FI CONNECTED!");
+
+        Serial.print("ESP32 LAN IP: ");
         Serial.println(WiFi.localIP());
 
-        startWebServer();
+        Serial.print("Gateway: ");
+        Serial.println(WiFi.gatewayIP());
 
-        // No hotspot is needed while home Wi-Fi works.
-        Serial.println("Backup hotspot will start if Wi-Fi is lost.");
+        Serial.print("RSSI: ");
+        Serial.print(WiFi.RSSI());
+        Serial.println(" dBm");
     } else {
-        Serial.println("Home Wi-Fi unavailable.");
-        Serial.println("Switching to backup hotspot.");
+        Serial.println("HOME WI-FI CONNECTION FAILED.");
 
-        startLocalHotspot();
+        Serial.print("Wi-Fi status code: ");
+        Serial.println((int)WiFi.status());
+
+        Serial.println(
+            "Check the 2.4 GHz SSID, password, router security, and signal."
+        );
+
+        Serial.print("Hotspot IP remains: ");
+        Serial.println(WiFi.softAPIP());
     }
-
-    updateOLED();
 }
 
 // =====================================================
-// MONITOR AND RETRY HOME WI-FI
-// Start hotspot if connection is lost.
-// Keep hotspot active once started.
+// MAINTAIN WI-FI
 // =====================================================
-void maintainWiFi(unsigned long now) {
-    if (WiFi.status() == WL_CONNECTED) {
-        return;
-    }
 
-    // If router Wi-Fi is lost, provide local access.
-    if (!localAPStarted) {
-        Serial.println("Home Wi-Fi lost.");
+void maintainWiFi(unsigned long now) {
+    homeWiFiConnected =
+        WiFi.status() == WL_CONNECTED;
+
+    if (!hotspotStarted) {
         startLocalHotspot();
     }
 
-    if (now - previousWiFiRetryMillis <
-        WIFI_RETRY_INTERVAL) {
+    if (homeWiFiConnected) {
         return;
     }
 
-    previousWiFiRetryMillis = now;
+    if (now - lastWiFiRetryMs <
+        WIFI_RETRY_INTERVAL_MS) {
+        return;
+    }
+
+    lastWiFiRetryMs = now;
 
     Serial.println("Retrying home Wi-Fi...");
-    WiFi.begin(HOME_WIFI_SSID, HOME_WIFI_PASSWORD);
+
+    WiFi.begin(
+        HOME_WIFI_SSID,
+        HOME_WIFI_PASSWORD
+    );
 }
 
 // =====================================================
 // MEASURE WATER CONSUMPTION
 // =====================================================
-void measureWaterConsumption() {
-    uint32_t pulses;
+
+void measureWaterConsumption(unsigned long elapsedMs) {
+    unsigned long currentPulses = 0;
 
     portENTER_CRITICAL(&pulseMux);
-    pulses = pulseCount;
+    currentPulses = pulseCount;
     pulseCount = 0;
     portEXIT_CRITICAL(&pulseMux);
 
-    lastIntervalLiters =
-        (float)pulses / PULSES_PER_LITER;
+    if (elapsedMs == 0) {
+        elapsedMs = MEASURE_INTERVAL_MS;
+    }
 
-    flowRate = lastIntervalLiters * 60.0f;
+    float measuredLiters =
+        (float)currentPulses / PULSES_PER_LITER;
 
-    totalLiters += lastIntervalLiters;
+    totalLiters += measuredLiters;
+    reportingWindowLiters += measuredLiters;
 
-    Serial.print("Pulses: ");
-    Serial.print(pulses);
+    flowRateLMin =
+        measuredLiters * 60000.0f /
+        (float)elapsedMs;
 
-    Serial.print(" | Flow: ");
-    Serial.print(flowRate, 3);
-    Serial.print(" L/min");
-
-    Serial.print(" | Interval: ");
-    Serial.print(lastIntervalLiters, 5);
-    Serial.print(" L");
-
-    Serial.print(" | Total: ");
-    Serial.print(totalLiters, 3);
-    Serial.println(" L");
+    Serial.printf(
+        "Pulses: %lu | Flow: %.3f L/min | Added: %.6f L | Total: %.3f L\n",
+        currentPulses,
+        flowRateLMin,
+        measuredLiters,
+        totalLiters
+    );
 }
 
 // =====================================================
-// SEND DATA TO BACKEND
+// FINALIZE REPORTING WINDOW
 // =====================================================
-void sendToBackend() {
-    if (WiFi.status() != WL_CONNECTED) {
-        Serial.println("Backend skipped: home Wi-Fi unavailable.");
+
+void finalizeReportingWindow() {
+    unsigned long now = millis();
+
+    unsigned long elapsedMs =
+        now - reportingWindowStartMs;
+
+    if (elapsedMs == 0) {
         return;
     }
 
-    HTTPClient http;
-    WiFiClient client;
+    intervalLiters = reportingWindowLiters;
 
-    http.setConnectTimeout(3000);
-    http.setTimeout(3000);
+    flowRateLMin =
+        intervalLiters * 60000.0f /
+        (float)elapsedMs;
 
-    if (!http.begin(client, SERVER_URL)) {
-        Serial.println("Backend HTTP initialization failed.");
+    Serial.println();
+    Serial.println("===== 10-SECOND REPORTING WINDOW =====");
+
+    Serial.print("Elapsed: ");
+    Serial.print(elapsedMs);
+    Serial.println(" ms");
+
+    Serial.print("Window volume: ");
+    Serial.print(intervalLiters, 6);
+    Serial.println(" L");
+
+    Serial.print("Average flow: ");
+    Serial.print(flowRateLMin, 4);
+    Serial.println(" L/min");
+
+    Serial.print("Total: ");
+    Serial.print(totalLiters, 4);
+    Serial.println(" L");
+
+    Serial.println("======================================");
+    Serial.println();
+
+    reportingWindowLiters = 0.0f;
+    reportingWindowStartMs = now;
+}
+
+// =====================================================
+// UPDATE OLED
+// =====================================================
+
+void updateOLED() {
+    if (!oledReady) {
         return;
     }
 
-    http.addHeader("Content-Type", "application/json");
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
 
-    String payload = "{";
-    payload += "\"deviceId\":\"" + String(DEVICE_ID) + "\",";
-    payload += "\"consumption\":" + String(totalLiters, 5) + ",";
-    payload += "\"flowRate\":" + String(flowRate, 5) + ",";
-    payload += "\"intervalLiters\":" + String(lastIntervalLiters, 5);
-    payload += "}";
+    display.setCursor(0, 0);
+    display.println("WATER MONITOR");
 
-    Serial.print("Sending to backend: ");
-    Serial.println(payload);
+    display.setCursor(0, 12);
+    display.print("Flow: ");
+    display.print(flowRateLMin, 2);
+    display.println(" L/min");
 
-    int httpCode = http.POST(payload);
+    display.setCursor(0, 23);
+    display.print("Window: ");
+    display.print(intervalLiters, 3);
+    display.println(" L");
 
-    if (httpCode > 0) {
-        Serial.print("Backend HTTP response: ");
-        Serial.println(httpCode);
+    display.setCursor(0, 34);
+    display.print("Total: ");
+    display.print(totalLiters, 2);
+    display.println(" L");
 
-        String response = http.getString();
+    display.setCursor(0, 45);
+    display.print("WiFi:");
+    display.print(
+        WiFi.status() == WL_CONNECTED ? "ON " : "OFF "
+    );
 
-        if (response.length() > 0) {
-            Serial.println(response);
-        }
-    } else {
-        Serial.print("Backend request failed: ");
-        Serial.println(http.errorToString(httpCode));
-    }
+    display.print("SD:");
+    display.print(sdReady ? "ON" : "OFF");
 
-    http.end();
+    display.setCursor(0, 56);
+    display.print("Queue: ");
+    display.print(pendingQueueCount());
+
+    display.display();
 }
 
 // =====================================================
 // SERIAL COMMANDS
-// R = reset total
-// S = save total immediately
-// P = print status
 // =====================================================
-void handleSerialCommands() {
-    while (Serial.available() > 0) {
-        char command = Serial.read();
 
-        if (command == 'R' || command == 'r') {
-            totalLiters = 0.0f;
-            flowRate = 0.0f;
-            lastIntervalLiters = 0.0f;
+void processSerialCommands() {
+    if (!Serial.available()) {
+        return;
+    }
 
-            saveTotalConsumption();
-            updateOLED();
+    char command = Serial.read();
 
-            Serial.println("Total reset to zero.");
-        } else if (command == 'S' || command == 's') {
-            saveTotalConsumption();
-            Serial.println("Total saved.");
-        } else if (command == 'P' || command == 'p') {
-            Serial.println("----- WATER STATUS -----");
-            Serial.print("Flow: ");
-            Serial.print(flowRate, 3);
-            Serial.println(" L/min");
+    if (command == 'R' || command == 'r') {
+        totalLiters = 0.0f;
+        reportingWindowLiters = 0.0f;
 
-            Serial.print("Total: ");
-            Serial.print(totalLiters, 3);
-            Serial.println(" L");
+        saveTotalLiters();
 
-            Serial.print("Home Wi-Fi: ");
-            Serial.println(
-                WiFi.status() == WL_CONNECTED ? "Connected" : "Disconnected"
-            );
+        Serial.println("Total consumption reset.");
+    } else if (command == 'S' || command == 's') {
+        saveTotalLiters();
 
-            Serial.print("Backup hotspot: ");
-            Serial.println(localAPStarted ? "Active" : "Off");
+        Serial.println("Total consumption saved.");
+    } else if (command == 'P' || command == 'p') {
+        Serial.println();
+        Serial.println("===== SYSTEM STATUS =====");
 
-            Serial.print("microSD: ");
-            Serial.println(sdReady ? "Ready" : "Unavailable");
+        Serial.printf(
+            "Total: %.4f L\n",
+            totalLiters
+        );
 
-            Serial.println("------------------------");
-        }
+        Serial.printf(
+            "Window: %.6f L\n",
+            intervalLiters
+        );
+
+        Serial.printf(
+            "Flow: %.4f L/min\n",
+            flowRateLMin
+        );
+
+        Serial.printf(
+            "Wi-Fi: %s\n",
+            WiFi.status() == WL_CONNECTED
+                ? "Connected"
+                : "Disconnected"
+        );
+
+        Serial.printf(
+            "Hotspot: %s\n",
+            hotspotStarted ? "Started" : "Not started"
+        );
+
+        Serial.printf(
+            "SD: %s\n",
+            sdReady ? "Available" : "Unavailable"
+        );
+
+        Serial.printf(
+            "Pending: %lu\n",
+            pendingQueueCount()
+        );
+
+        Serial.println(
+            "Last upload: " + lastUploadStatus
+        );
+
+        Serial.println("=========================");
+        Serial.println();
     }
 }
 
 // =====================================================
 // SETUP
 // =====================================================
+
 void setup() {
     Serial.begin(115200);
     delay(1000);
 
     Serial.println();
-    Serial.println("================================");
-    Serial.println("ESP32 WATER MONITORING SYSTEM");
-    Serial.println("================================");
+    Serial.println("==============================");
+    Serial.println("ESP32 WATER MONITOR");
+    Serial.println("==============================");
 
-    preferences.begin(PREF_NAMESPACE, false);
-    restoreTotalConsumption();
+    preferences.begin(
+        "waterMeter",
+        false
+    );
+
+    restoreTotalLiters();
 
     initializeOLED();
     initializeSDCard();
 
-    pinMode(FLOW_SENSOR_PIN, INPUT_PULLUP);
-
-    portENTER_CRITICAL(&pulseMux);
-    pulseCount = 0;
-    portEXIT_CRITICAL(&pulseMux);
+    pinMode(
+        FLOW_SENSOR_PIN,
+        INPUT_PULLUP
+    );
 
     attachInterrupt(
         digitalPinToInterrupt(FLOW_SENSOR_PIN),
-        flowPulseISR,
-        FALLING
+        onFlowPulse,
+        SENSOR_INTERRUPT_EDGE
     );
 
-    Serial.println("Flow sensor interrupt enabled.");
+    unsigned long now = millis();
+
+    lastMeasureMs = now;
+    lastQueueMs = now;
+    lastSaveMs = now;
+    lastWiFiRetryMs = now;
+    lastOLEDUpdateMs = now;
+
+    lastUploadAttemptMs =
+        now - UPLOAD_RETRY_INTERVAL_MS;
+
+    reportingWindowStartMs = now;
 
     setupWiFi();
 
-    previousMeasurementMillis = millis();
-    previousSaveMillis = millis();
-    previousSDMillis = millis();
-    previousBackendMillis = millis();
-    previousWiFiRetryMillis = millis();
-    previousOLEDMillis = millis();
-
-    Serial.println("System setup complete.");
-    Serial.println("R=reset total, S=save, P=status");
+    Serial.println();
+    Serial.println("Setup complete.");
+    Serial.println("R = Reset total");
+    Serial.println("S = Save total");
+    Serial.println("P = Print status");
+    Serial.println(
+        "Sensor and local features continue if home Wi-Fi is unavailable."
+    );
 }
 
 // =====================================================
 // MAIN LOOP
 // =====================================================
+
 void loop() {
     unsigned long now = millis();
 
@@ -735,35 +1238,38 @@ void loop() {
         server.handleClient();
     }
 
-    if (now - previousMeasurementMillis >=
-        MEASUREMENT_INTERVAL) {
-        previousMeasurementMillis += MEASUREMENT_INTERVAL;
-        measureWaterConsumption();
+    if (now - lastMeasureMs >= MEASURE_INTERVAL_MS) {
+        unsigned long elapsedMs =
+            now - lastMeasureMs;
+
+        lastMeasureMs = now;
+
+        measureWaterConsumption(elapsedMs);
+        logMeasurementToCSV();
     }
 
-    if (now - previousSaveMillis >= SAVE_INTERVAL) {
-        previousSaveMillis = now;
-        saveTotalConsumption();
+    if (now - lastSaveMs >= SAVE_TOTAL_INTERVAL_MS) {
+        lastSaveMs = now;
+        saveTotalLiters();
     }
 
-    if (now - previousSDMillis >= SD_LOG_INTERVAL) {
-        previousSDMillis = now;
-        logToSD();
-    }
+    if (now - lastQueueMs >= QUEUE_INTERVAL_MS) {
+        lastQueueMs = now;
 
-    if (now - previousBackendMillis >= BACKEND_INTERVAL) {
-        previousBackendMillis = now;
-        sendToBackend();
+        finalizeReportingWindow();
+        saveTotalLiters();
+        enqueueReading();
     }
 
     maintainWiFi(now);
+    uploadPendingReadings();
 
-    if (now - previousOLEDMillis >= OLED_INTERVAL) {
-        previousOLEDMillis = now;
+    if (now - lastOLEDUpdateMs >= OLED_INTERVAL_MS) {
+        lastOLEDUpdateMs = now;
         updateOLED();
     }
 
-    handleSerialCommands();
+    processSerialCommands();
 
     delay(2);
 }
